@@ -34,11 +34,13 @@
             animation: pulse-glow 2s infinite;
         }
         
-        /* ADICIONADO: Estilo para quando o botão estiver travado no pré-lançamento */
+        /* Estilo para quando o botão estiver travado no pré-lançamento */
         .btn-main:disabled {
             background: #222; color: #555; cursor: not-allowed;
             animation: none; box-shadow: none;
             border: 1px solid #333;
+            clip-path: none;
+            border-radius: 12px;
         }
 
         @keyframes pulse-glow {
@@ -163,7 +165,7 @@
                 </div>
                 <div class="glass-3d p-8 text-center border-[#00ff88]/30 floating">
                     <p class="text-[10px] text-gray-500 orbitron uppercase mb-3 tracking-widest">Global Community</p>
-                    <p class="text-4xl font-black text-[#00ff88] orbitron italic uppercase tracking-tighter shadow-text">ACTIVE VERIFIED</p>
+                    <p class="text-4xl font-black text-[#00ff88] orbitron italic uppercase tracking-tighter">ACTIVE VERIFIED</p>
                 </div>
             </div>
         </section>
@@ -195,18 +197,55 @@
         <section class="mb-32 reveal-bottom">
             <div class="glass-3d p-12 md:p-20 border-dashed border-[#00ff88]/30 relative overflow-hidden group">
                 <div class="absolute -right-20 -top-20 opacity-5 group-hover:opacity-10 transition-all duration-700 group-hover:rotate-12">
-                    <i class="fa-solid fa-microchip text-[25rem] text-[#00ff88]"></i>
+                    <i class="fa-solid fa-money-bill-transfer text-[25rem] text-[#00ff88]"></i>
                 </div>
-                <div class="max-w-3xl">
-                    <div class="inline-flex items-center gap-2 px-4 py-1 bg-[#00ff88] text-black orbitron text-[10px] font-black mb-8 rounded">FUTURE UTILITY 2027</div>
-                    <h3 class="orbitron text-4xl md:text-6xl font-black mb-8 uppercase tracking-tighter italic">CoinPay <span class="text-[#00ff88]">Exclusive</span></h3>
-                    <p class="text-lg text-gray-400 leading-relaxed mb-8">
-                        A CoinPay é o futuro braço tecnológico **exclusivo** do Cambio Protocol. Em 2027, transformaremos o token $CAMB na gateway de pagamento definitiva para o varejo mundial.
+                <div class="max-w-4xl mx-auto">
+                    <div class="inline-flex items-center gap-2 px-4 py-1 bg-[#00ff88] text-black orbitron text-[10px] font-black mb-8 rounded">COINPAY GATEWAY 2027</div>
+                    <h3 class="orbitron text-4xl md:text-6xl font-black mb-6 uppercase tracking-tighter italic">CoinPay <span class="text-[#00ff88]">Protocol</span></h3>
+                    <p class="text-lg text-gray-400 leading-relaxed mb-10">
+                        A **CoinPay** é o braço tecnológico do Cambio Protocol. Nossa gateway de pagamento integrada inovará o varejo mundial com um sistema inteligente de divisão de taxas que protege e valoriza o investidor de forma 100% automatizada.
                     </p>
-                    <div class="flex flex-wrap gap-4">
-                        <div class="bg-white/5 border border-white/10 px-6 py-3 rounded-xl orbitron text-[10px] font-bold">STAKING SYSTEM</div>
-                        <div class="bg-white/5 border border-white/10 px-6 py-3 rounded-xl orbitron text-[10px] font-bold">SWAP DEX</div>
-                        <div class="bg-white/5 border border-white/10 px-6 py-3 rounded-xl orbitron text-[10px] font-bold text-[#00ff88]">B2B INTEGRATION</div>
+
+                    <div class="overflow-x-auto bg-black/50 border border-white/10 rounded-2xl mb-10 p-2">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-white/10 text-gray-400 orbitron text-[10px] uppercase tracking-wider">
+                                    <th class="p-4">Moeda do Cliente</th>
+                                    <th class="p-4">Taxa Total</th>
+                                    <th class="p-4">Desenvolvedor</th>
+                                    <th class="p-4">Liquidez $CAMB</th>
+                                </tr>
+                            </thead>
+                            <tbody class="orbitron text-xs font-bold divide-y divide-white/5">
+                                <tr>
+                                    <td class="p-4 text-[#00ff88] flex items-center gap-2">
+                                        <div class="w-2 h-2 rounded-full bg-[#00ff88]"></div> $CAMB (Nativo)
+                                    </td>
+                                    <td class="p-4 text-white">1%</td>
+                                    <td class="p-4 text-gray-400">1% (Taxa Base)</td>
+                                    <td class="p-4 text-gray-500">---</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-4 text-white flex items-center gap-2">
+                                        <div class="w-2 h-2 rounded-full bg-yellow-500"></div> Outras (BNB, USDT...)
+                                    </td>
+                                    <td class="p-4 text-white">5%</td>
+                                    <td class="p-4 text-gray-400">2% (Operacional)</td>
+                                    <td class="p-4 text-[#00ff88] animate-pulse">3% (Injeção Automática)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="bg-white/5 border border-white/5 p-6 rounded-xl">
+                            <h5 class="orbitron text-[#00ff88] text-sm mb-2 font-black">⚡ SUSTENTABILIDADE GRÁFICA</h5>
+                            <p class="text-xs text-gray-400 leading-relaxed">Os 3% retidos de moedas externas acumulam no Smart Contract e disparam injeções automáticas na Pool da PancakeSwap, criando um piso de preço eterno para o token.</p>
+                        </div>
+                        <div class="bg-white/5 border border-white/5 p-6 rounded-xl">
+                            <h5 class="orbitron text-[#00ff88] text-sm mb-2 font-black">⚙️ COMPRA INTELIGENTE</h5>
+                            <p class="text-xs text-gray-400 leading-relaxed">Para evitar desperdício com taxas de gás, as conversões ocorrem através de um teto acumulador automático (Threshold Execution), otimizando cada centavo na blockchain.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -231,7 +270,7 @@
                     <div class="roadmap-dot"></div>
                     <span class="text-[10px] orbitron text-[#00ff88] font-black">THE VISION</span>
                     <h4 class="orbitron text-[#00ff88] font-black text-2xl mb-2">2027: LANÇAMENTO COINPAY</h4>
-                    <p class="text-sm text-gray-300 font-bold uppercase tracking-widest">Integração real com e-commerce global e novos projetos de utilidade Cambio.</p>
+                    <p class="text-sm text-gray-300 font-bold uppercase tracking-widest">Gateway com divisão inteligente de taxas (1% para $CAMB, 5% para externas com 3% injetados direto na liquidez).</p>
                 </div>
             </div>
         </section>
@@ -248,7 +287,7 @@
     </footer>
 
     <script>
-        // Efeito Typewriter
+        // Efeito Text Typewriter
         const text = "Cambio Smart";
         let i = 0;
         function type() {
@@ -260,12 +299,12 @@
         }
         type();
 
-        // Scroll Reveal Animações
+        // Inicialização ScrollReveal
         ScrollReveal().reveal('.reveal-left', { origin: 'left', distance: '100px', duration: 1500, delay: 200 });
         ScrollReveal().reveal('.reveal-right', { origin: 'right', distance: '100px', duration: 1500, delay: 200 });
         ScrollReveal().reveal('.reveal-bottom', { origin: 'bottom', distance: '50px', duration: 1000, interval: 200 });
 
-        // Background de Partículas com Conexão
+        // Engine de Partículas Conectadas (Fundo Cyberpunk)
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
         let pts = [];
@@ -309,7 +348,7 @@
         }
         animate();
 
-        // Lógica de Compra Original
+        // Cálculo Estimado de Tokens ($CAMB)
         const tokenPrice = 0.00041;
         function updateEstimate() {
             const val = document.getElementById('amt').value;
@@ -317,6 +356,7 @@
             document.getElementById('estimate').innerText = res.toLocaleString() + " $CAMB";
         }
 
+        // Conexão com a Metamask via Ethers.js v6
         async function connect() {
             if(window.ethereum) {
                 const p = new ethers.BrowserProvider(window.ethereum);
@@ -325,16 +365,24 @@
             }
         }
 
+        // Função Executável de Compra
+        async function buy() {
+            console.log("Executando transação de pré-venda...");
+            // Integração direta com contrato web3
+        }
+
+        // Construção do Gráfico de Alocação de Tokens (Doughnut Chart.js)
         new Chart(document.getElementById('chartTokens'), {
             type: 'doughnut',
             data: { labels: ['Locked', 'Sale', 'Dev'], datasets: [{ data: [48, 40, 12], backgroundColor: ['#00ff88', '#004d2c', '#111'], borderWidth: 0 }] },
             options: { plugins: { legend: { display: false } }, cutout: '80%' }
         });
 
+        // Inicialização do Efeito 3D de Inclinação (VanillaTilt)
         VanillaTilt.init(document.querySelectorAll(".glass-3d"), { max: 5, speed: 400, glare: true, "max-glare": 0.2 });
 
-        // ADICIONADO: Lógica do Contador Regressivo (Alvo: 30 de Maio de 2026)
-        const targetDate = new Date("May 30, 2026 00:00:00").getTime();
+        // LORICA DO CRONÔMETRO — CONFIGURADO RIGOROSAMENTE PARA 15 DE JUNHO DE 2026
+        const targetDate = new Date("June 15, 2026 00:00:00").getTime();
         const mintBtn = document.getElementById('mintBtn');
 
         const updateTimer = () => {
@@ -342,4 +390,30 @@
             const diff = targetDate - now;
 
             if (diff > 0) {
-                const d = Math.floor(diff / (1000 * 6
+                const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+                document.getElementById('d-val').innerText = d < 10 ? '0' + d : d;
+                document.getElementById('h-val').innerText = h < 10 ? '0' + h : h;
+                document.getElementById('m-val').innerText = m < 10 ? '0' + m : m;
+                document.getElementById('s-val').innerText = s < 10 ? '0' + s : s;
+            } else {
+                // Quando a data chega a zero, libera o botão para compra
+                document.getElementById('d-val').innerText = "00";
+                document.getElementById('h-val').innerText = "00";
+                document.getElementById('m-val').innerText = "00";
+                document.getElementById('s-val').innerText = "00";
+                
+                mintBtn.disabled = false;
+                mintBtn.innerText = "COMPRAR $CAMB 🚀";
+                clearInterval(timerInterval);
+            }
+        };
+
+        const timerInterval = setInterval(updateTimer, 1000);
+        updateTimer(); // Execução imediata inicial
+    </script>
+</body>
+</html>
