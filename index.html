@@ -80,6 +80,52 @@
     </style>
 </head>
 <body>
+    <!-- Fundo (Canvas opcional para o efeito de partículas) -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Hero Section -->
+    <section class="min-h-screen flex flex-col items-center justify-center text-center px-4">
+        
+        <!-- Badge de Segurança -->
+        <div class="badge-security mb-6 uppercase tracking-widest">
+            <i class="fas fa-shield-halved mr-1"></i> Protocolo Seguro & Auditado
+        </div>
+
+        <!-- Título -->
+        <h1 class="orbitron text-5xl md:text-7xl font-black mb-6">
+            CAMBIO <span class="text-[#00ff88]">PROTOCOL</span>
+        </h1>
+        
+        <p class="max-w-xl text-gray-400 mb-10 text-lg">
+            A solução definitiva para pagamentos descentralizados. Rápido, seguro e transparente.
+        </p>
+
+        <!-- Botão de Navegação -->
+        <div class="flex gap-4">
+            <a href="CoinPay.html" class="btn-main px-10 py-4 text-lg">
+                ACESSAR COINPAY <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+            
+            <button class="btn-whitepaper px-8 py-4">
+                WHITE PAPER
+            </button>
+        </div>
+
+    </section>
+
+    <!-- Adicione seus scripts aqui no final para garantir o carregamento correto -->
+    <script>
+        // Inicialização do Vanilla Tilt nos elementos
+        VanillaTilt.init(document.querySelectorAll(".glass-3d"), {
+            max: 5,
+            speed: 400
+        });
+
+        // Inicialização do ScrollReveal
+        ScrollReveal().reveal('h1, .btn-main', { delay: 200, duration: 1000, distance: '30px' });
+    </script>
+</body>
+<body>
 
     <canvas id="bg-canvas"></canvas>
 
@@ -328,251 +374,4 @@
                         await verificarEMudarRede(provider);
                         await vincularConta(accounts[0]);
                         return;
-                    }
-                } catch (err) {
-                    console.log("Conexão cancelada pelo usuário.");
-                    fecharSeletor();
-                    return;
-                }
-            }
-
-            const urlLimpa = window.location.href.replace(/^https?:\/\//, '');
-            if (carteiraEscolhida === 'metamask') {
-                window.location.href = "https://metamask.app.link/dapp/" + urlLimpa;
-            } else if (carteiraEscolhida === 'trust') {
-                window.location.href = "https://link.trustwallet.com/open_url?url=" + encodeURIComponent(window.location.href);
-            }
-        }
-
-        async function verificarEMudarRede(provider) {
-            try {
-                await provider.request({
-                    method: 'wallet_switchEthereumChain',
-                    params: [{ chainId: '0x38' }], 
-                });
-            } catch (switchError) {
-                if (switchError.code === 4902) {
-                    try {
-                        await provider.request({
-                            method: 'wallet_addEthereumChain',
-                            params: [{
-                                chainId: '0x38',
-                                chainName: 'BNB Smart Chain',
-                                nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
-                                rpcUrls: ['https://bsc-dataseed.binance.org/'],
-                                blockExplorerUrls: ['https://bscscan.com/']
-                            }],
-                        });
-                    } catch (addError) {
-                        console.error("Erro ao injetar rede.");
-                    }
-                }
-            }
-        }
-
-        async function atualizarSaldo(account, provider) {
-            try {
-                const browserProvider = new ethers.BrowserProvider(provider);
-                const balanceBigInt = await browserProvider.getBalance(account);
-                const balanceInBnb = ethers.formatEther(balanceBigInt);
-                
-                const saldoFormatado = parseFloat(balanceInBnb).toFixed(4);
-                
-                const balanceLabel = document.getElementById("walletBalance");
-                balanceLabel.innerText = `Saldo: ${saldoFormatado} BNB`;
-                balanceLabel.classList.remove("hidden");
-            } catch (e) {
-                console.error("Erro ao puxar saldo:", e);
-            }
-        }
-
-        async function vincularConta(account) {
-            contaConectada = account;
-            fecharSeletor();
-
-            const provider = provedorAtivo || window.ethereum;
-            if (provider) {
-                await atualizarSaldo(account, provider);
-            }
-
-            const shortAcc = account.substring(0,6) + "..." + account.substring(account.length - 4);
-            
-            const btnCon = document.getElementById("btnCon");
-            btnCon.innerText = shortAcc.toUpperCase();
-            btnCon.style.animation = "none";
-            btnCon.style.background = "#111318";
-            btnCon.style.color = "#00ff88";
-            btnCon.style.border = "1px solid #00ff88";
-
-            const btnCon2 = document.getElementById("btnCon2");
-            btnCon2.innerHTML = `<i class="fa-solid fa-wallet text-[#00ff88]"></i> DESCONECTAR (${shortAcc.toUpperCase()})`;
-            btnCon2.style.background = "#111318";
-            btnCon2.style.borderColor = "#ff3b30";
-            btnCon2.style.color = "#ff3b30";
-
-            const mintBtn = document.getElementById("mintBtn");
-            mintBtn.disabled = false;
-            mintBtn.innerText = "BUY $CAMB";
-            mintBtn.style.background = "#00ff88";
-            mintBtn.style.color = "#000";
-        }
-
-        function desconectarCarteira() {
-            contaConectada = "";
-            provedorAtivo = null;
-            
-            document.getElementById("walletBalance").classList.add("hidden");
-
-            const btnCon = document.getElementById("btnCon");
-            btnCon.innerText = "CONNECT_WALLET";
-            btnCon.style.animation = "smooth-glow 3s infinite ease-in-out";
-            btnCon.style.background = "#00ff88";
-            btnCon.style.color = "#000";
-            btnCon.style.border = "none";
-
-            const btnCon2 = document.getElementById("btnCon2");
-            btnCon2.innerHTML = `<i class="fa-solid fa-wallet text-[#00ff88]"></i> Conectar Carteira`;
-            btnCon2.style.background = "rgba(255, 255, 255, 0.05)";
-            btnCon2.style.borderColor = "rgba(0, 255, 136, 0.3)";
-            btnCon2.style.color = "#fff";
-
-            const mintBtn = document.getElementById("mintBtn");
-            mintBtn.disabled = true;
-            mintBtn.innerText = "CONECTE A CARTEIRA 🔒";
-        }
-
-        async function buy() {
-            const bnbVal = document.getElementById("amt").value;
-            if(!bnbVal || bnbVal <= 0) { alert("Insira um valor válido de BNB."); return; }
-            
-            const provider = provedorAtivo || window.ethereum;
-            
-            if (provider && contaConectada) {
-                try {
-                    await verificarEMudarRede(provider);
-                    const browserProvider = new ethers.BrowserProvider(provider);
-                    const signer = await browserProvider.getSigner();
-                    
-                    const enderecoPreVenda = "0x0000000000000000000000000000000000000000"; 
-                    
-                    const tx = await signer.sendTransaction({
-                        to: enderecoPreVenda,
-                        value: ethers.parseEther(bnbVal)
-                    });
-                    
-                    alert(`Transação Enviada! Hash: ${tx.hash}`);
-                } catch (e) {
-                    alert(`Falha no processamento: ${e.message}`);
-                }
-            } else {
-                alert("Nenhuma conexão de carteira activa detectada.");
-            }
-        }
-    </script>
-
-    <script>
-        const text = "Cambio Smart";
-        let idx = 0;
-        function type() {
-            if (idx < text.length) {
-                document.getElementById("typewriter").innerHTML += text.charAt(idx);
-                idx++;
-                setTimeout(type, 150);
-            }
-        }
-        type();
-
-        ScrollReveal().reveal('.reveal-left', { origin: 'left', distance: '100px', duration: 1500, delay: 200 });
-        ScrollReveal().reveal('.reveal-right', { origin: 'right', distance: '100px', duration: 1500, delay: 200 });
-        ScrollReveal().reveal('.reveal-bottom', { origin: 'bottom', distance: '50px', duration: 1000, interval: 200 });
-
-        const canvas = document.getElementById('bg-canvas');
-        const ctx = canvas.getContext('2d');
-        let pts = [];
-        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        window.addEventListener('resize', resize); resize();
-
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.vx = (Math.random() - 0.5) * 0.5;
-                this.vy = (Math.random() - 0.5) * 0.5;
-                this.radius = Math.random() * 1.5 + 0.5;
-            }
-            update() {
-                this.x += this.vx; this.y += this.vy;
-                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
-                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
-            }
-            draw() {
-                ctx.beginPath(); ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(0, 255, 136, 0.2)'; ctx.fill();
-            }
-        }
-        function init() { pts = []; for (let n = 0; n < 40; n++) { pts.push(new Particle()); } } init();
-        function loop() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for (let n = 0; n < pts.length; n++) {
-                pts[n].update(); pts[n].draw();
-                for (let j = n + 1; j < pts.length; j++) {
-                    const d = Math.hypot(pts[n].x - pts[j].x, pts[n].y - pts[j].y);
-                    if (d < 100) {
-                        ctx.beginPath(); ctx.moveTo(pts[n].x, pts[n].y); ctx.lineTo(pts[j].x, pts[j].y);
-                        ctx.strokeStyle = `rgba(0, 255, 136, ${0.12 - d/100})`; ctx.lineWidth = 0.5; ctx.stroke();
-                    }
-                }
-            }
-            requestAnimationFrame(loop);
-        }
-        loop();
-
-        // LÓGICA DO CRONÔMETRO CORRIGIDA
-        const targetDate = new Date("2026-06-15T00:00:00").getTime();
-        
-        function updateTimer() {
-            const now = new Date().getTime();
-            const diff = targetDate - now;
-            
-            if(diff > 0) {
-                document.getElementById("d-val").innerText = Math.floor(diff / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
-                document.getElementById("h-val").innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
-                document.getElementById("m-val").innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
-                document.getElementById("s-val").innerText = Math.floor((diff % (1000 * 60)) / 1000).toString().padStart(2, '0');
-            } else {
-                document.getElementById("d-val").innerText = "00";
-                document.getElementById("h-val").innerText = "00";
-                document.getElementById("m-val").innerText = "00";
-                document.getElementById("s-val").innerText = "00";
-            }
-        }
-
-        updateTimer(); // Atualiza na hora que a página carrega
-        setInterval(updateTimer, 1000); // Mantém atualizando
-
-        function updateEstimate() {
-            const val = document.getElementById("amt").value;
-            const est = document.getElementById("estimate");
-            if (val > 0) { est.innerText = (val / 0.00041).toLocaleString('en-US', {maximumFractionDigits: 2}) + " $CAMB"; } 
-            else { est.innerText = "0.00 $CAMB"; }
-        }
-
-        const ctxChart = document.getElementById('chartTokens').getContext('2d');
-        new Chart(ctxChart, {
-            type: 'doughnut',
-            data: {
-                labels: ['Pre-sale (40%)', 'Liquidity (36%)', 'Admin Wallet (24%)'],
-                datasets: [{
-                    data: [10000000, 9000000, 6000000],
-                    backgroundColor: ['#00ff88', 'rgba(0, 255, 136, 0.5)', '#111318'],
-                    borderColor: ['#00ff88', 'rgba(0, 255, 136, 0.5)', 'rgba(255, 255, 255, 0.1)'],
-                    borderWidth: 1
-                }]
-            },
-            options: { responsive: true, plugins: { legend: { position: 'bottom', labels: { color: '#fff', font: { family: 'Orbitron', size: 10 } } } }, cutout: '75%' }
-        });
-        
-        VanillaTilt.init(document.querySelectorAll(".glass-3d"), { max: 2, speed: 400, glare: true, "max-glare": 0.03 });
-    </script>
-</body>
-</html>
+ 
