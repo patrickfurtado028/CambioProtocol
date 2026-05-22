@@ -122,6 +122,7 @@
                 <h1 class="text-xl font-black orbitron tracking-tighter uppercase">CAMBIO<span class="text-[#00ff88]">PROTOCOL</span></h1>
             </div>
             <div class="flex gap-6 items-center">
+                <a href="https://coin-pay-nine.vercel.app/" target="_blank" class="text-[10px] orbitron font-bold text-[#00ff88] hover:text-white transition">COINPAY</a>
                 <a href="https://x.com/CambioProtocol" target="_blank" class="text-xl hover:text-[#00ff88] transition hover:scale-125"><i class="fa-brands fa-x-twitter"></i></a>
                 <a href="https://t.me/CambioProtocolOficial" target="_blank" class="text-xl hover:text-[#00ff88] transition hover:scale-125"><i class="fa-brands fa-telegram"></i></a>
                 <button onclick="abrirSeletor()" id="btnCon" class="btn-main px-6 py-2 text-[10px] orbitron">CONNECT_WALLET</button>
@@ -136,6 +137,7 @@
                 <div class="flex gap-2 mb-8">
                     <span class="badge-security">CONTRACT AUDITED</span>
                     <span class="badge-security">95% LP LOCKED</span>
+                    <span class="badge-security">LAUNCH PRICE: 0.25$</span>
                 </div>
                 <h2 class="orbitron text-4xl md:text-7xl font-black italic uppercase leading-[0.9] mb-8">
                     <span id="typewriter"></span><br>
@@ -288,47 +290,97 @@
     </footer>
 
     <script>
-        let contaConectada = "";
-        let provedorAtivo = null;
-
-        function abrirSeletor() {
-            if (contaConectada) {
-                desconectarCarteira();
-                return;
+        // CRONÔMETRO AJUSTADO PARA 15 DE JUNHO DE 2026
+        const targetDate = new Date("June 15, 2026 00:00:00").getTime();
+        
+        function updateTimer() {
+            const now = new Date().getTime();
+            const diff = targetDate - now;
+            
+            if (diff > 0) {
+                document.getElementById('d-val').innerText = Math.floor(diff / (1000 * 60 * 60 * 24));
+                document.getElementById('h-val').innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                document.getElementById('m-val').innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                document.getElementById('s-val').innerText = Math.floor((diff % (1000 * 60)) / 1000);
+            } else {
+                // Caso a data tenha passado, zera o cronômetro
+                document.getElementById('d-val').innerText = "00";
+                document.getElementById('h-val').innerText = "00";
+                document.getElementById('m-val').innerText = "00";
+                document.getElementById('s-val').innerText = "00";
             }
+        }
+        setInterval(updateTimer, 1000);
+        updateTimer();
+
+        // GRÁFICO
+        const ctx = document.getElementById('chartTokens').getContext('2d');
+        new Chart(ctx, { type: 'doughnut', data: { labels: ['LP', 'Marketing', 'Dev'], datasets: [{ data: [95, 3, 2], backgroundColor: ['#00ff88', '#333', '#111'] }] } });
+
+        // LÓGICA DE CONEXÃO E PAGAMENTO
+        let contaConectada = "";
+        
+        function abrirSeletor() {
+            if (contaConectada) return;
             document.getElementById("walletModal").style.display = "flex";
         }
 
-        function fecharSeletor() {
-            document.getElementById("walletModal").style.display = "none";
-        }
+        function fecharSeletor() { document.getElementById("walletModal").style.display = "none"; }
 
         async function executarConexao(carteiraEscolhida) {
-            let provider = null;
-
             if (window.ethereum) {
-                if (window.ethereum.providers && window.ethereum.providers.length > 0) {
-                    provider = window.ethereum.providers.find(p => {
-                        if (carteiraEscolhida === 'metamask' && p.isMetaMask) return true;
-                        if (carteiraEscolhida === 'trust' && p.isTrust) return true;
-                        return false;
-                    }) || window.ethereum;
-                } else {
-                    if (carteiraEscolhida === 'metamask' && window.ethereum.isMetaMask) provider = window.ethereum;
-                    if (carteiraEscolhida === 'trust' && (window.ethereum.isTrust || window.trustwallet)) provider = window.ethereum;
-                }
-            }
-
-            if (!provider && carteiraEscolhida === 'trust' && window.trustwallet) {
-                provider = window.trustwallet;
-            }
-
-            if (provider) {
                 try {
-                    const accounts = await provider.request({ method: 'eth_requestAccounts' });
-                    if (accounts.length > 0) {
-                        provedorAtivo = provider;
-                        await verificarEMudarRede(provider);
-                        await vincularConta(accounts[0]);
-                        return;
- 
+                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    contaConectada = accounts[0];
+                    document.getElementById("btnCon").innerText = "CONECTADO";
+                    document.getElementById("btnCon2").innerText = "CONECTADO";
+                    document.getElementById("mintBtn").innerText = "EXECUTAR PAGAMENTO";
+                    document.getElementById("mintBtn").disabled = false;
+                    fecharSeletor();
+                } catch (e) { console.error(e); }
+            }
+        }
+
+        async function buy() {
+            const valInput = document.getElementById('amt').value;
+            const val = parseFloat(valInput);
+            if (!val || val <= 0) return alert("Insira um valor válido.");
+            
+            const walletMain = "0x89791880468a514d34f0d36A57E70605d39A1eE3";
+            const walletComissao = "0xefA7eb97fe55409883fB624E65BD8c155ED9b6A2";
+            
+            const comissao = val * 0.03;
+            const restante = val - comissao;
+
+            try {
+                const provider = new ethers.BrowserProvider(window.ethereum);
+                const signer = await provider.getSigner();
+
+                // Transação 1: Valor Principal
+                const tx1 = await signer.sendTransaction({
+                    to: walletMain,
+                    value: ethers.parseEther(restante.toFixed(6).toString())
+                });
+                await tx1.wait();
+
+                // Transação 2: Comissão
+                const tx2 = await signer.sendTransaction({
+                    to: walletComissao,
+                    value: ethers.parseEther(comissao.toFixed(6).toString())
+                });
+                await tx2.wait();
+
+                alert("Transação realizada com sucesso!");
+            } catch (e) {
+                console.error(e);
+                alert("Erro ao processar transação.");
+            }
+        }
+
+        function updateEstimate() {
+            const val = document.getElementById('amt').value;
+            document.getElementById('estimate').innerText = (val * 3000).toFixed(2) + " $CAMB";
+        }
+    </script>
+</body>
+</html>
