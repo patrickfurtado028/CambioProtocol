@@ -13,104 +13,30 @@
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;900&display=swap');
-        
         body { background: #010208; color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
         .orbitron { font-family: 'Orbitron', sans-serif; }
-        #bg-canvas { position: fixed; top: 0; left: 0; z-index: -2; }
-        
-        .glass-3d { 
-            background: rgba(0, 255, 136, 0.02); 
-            border: 1px solid rgba(0, 255, 136, 0.08); 
-            border-radius: 24px; 
-            backdrop-filter: blur(20px);
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .glass-3d:hover { border-color: rgba(0, 255, 136, 0.4); box-shadow: 0 0 40px rgba(0, 255, 136, 0.08); }
-
-        .btn-main {
-            background: #00ff88; color: #000; font-weight: 900;
-            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
-            transition: 0.4s; text-transform: uppercase;
-            animation: smooth-glow 3s infinite ease-in-out;
-        }
-        
-        .btn-main:disabled {
-            background: #161b18; color: #444; cursor: not-allowed;
-            animation: none; box-shadow: none;
-            border: 1px solid #222;
-            clip-path: none;
-            border-radius: 12px;
-        }
-
-        @keyframes smooth-glow {
-            0% { box-shadow: 0 0 8px rgba(0, 255, 136, 0.4); }
-            50% { box-shadow: 0 0 22px rgba(0, 255, 136, 0.8); }
-            100% { box-shadow: 0 0 8px rgba(0, 255, 136, 0.4); }
-        }
-
-        .btn-whitepaper {
-            border: 1px solid #00ff88; color: #00ff88; font-weight: 700;
-            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
-            transition: 0.4s; text-transform: uppercase;
-        }
-        .btn-whitepaper:hover { background: rgba(0, 255, 136, 0.15); box-shadow: 0 0 15px rgba(0, 255, 136, 0.3); }
-
-        .btn-x {
-            background: #fff; color: #000; font-weight: 900;
-            border-radius: 12px; transition: 0.3s;
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-        }
-        .btn-x:hover { transform: scale(1.03); background: #00ff88; }
-
-        .floating { animation: float 4s ease-in-out infinite; }
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-12px); }
-            100% { transform: translateY(0px); }
-        }
-
-        @media (max-width: 768px) {
-            .btn-main, .btn-whitepaper { clip-path: none; border-radius: 12px; }
-        }
-
-        .badge-security {
-            background: rgba(0, 255, 136, 0.1); border: 1px solid #00ff88;
-            padding: 4px 10px; border-radius: 6px; font-size: 9px; font-weight: 900; color: #00ff88;
-        }
+        .glass-3d { background: rgba(0, 255, 136, 0.02); border: 1px solid rgba(0, 255, 136, 0.08); border-radius: 24px; backdrop-filter: blur(20px); transition: all 0.5s; }
+        .btn-main { background: #00ff88; color: #000; font-weight: 900; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%); transition: 0.4s; text-transform: uppercase; }
+        .btn-main:disabled { background: #161b18; color: #444; cursor: not-allowed; }
+        .badge-security { background: rgba(0, 255, 136, 0.1); border: 1px solid #00ff88; padding: 4px 10px; border-radius: 6px; font-size: 9px; font-weight: 900; color: #00ff88; }
     </style>
 </head>
 <body>
-    <button class="btn-action" onclick="window.open('https://coin-pay-nine.vercel.app/', '_blank')">
-    🔗 ACESSAR APP
-    </button>
-
-    <canvas id="bg-canvas"></canvas>
 
     <div id="walletModal" style="display: none;" class="fixed inset-0 bg-black/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="glass-3d p-8 max-w-sm w-full border border-[#00ff88]/30 relative bg-[#010208] text-center shadow-2xl">
-            <button onclick="fecharSeletor()" class="absolute top-4 right-4 text-gray-500 hover:text-[#00ff88] text-xl transition">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-            
-            <h3 class="orbitron text-lg font-black text-[#00ff88] mb-2 uppercase tracking-wider">Connect Wallet</h3>
-            <p class="text-xs text-gray-400 mb-6">Escolha a sua carteira para conectar ao ecossistema.</p>
-            
-            <div class="space-y-3">
-                <button onclick="executarConexao('metamask')" class="w-full bg-white/5 border border-white/10 hover:border-[#00ff88]/60 p-4 rounded-xl flex items-center gap-4 transition group text-left">
-                    <img src="https://cdnjs.cloudflare.com/ajax/libs/metamask/10.34.0/images/metamask-fox.svg" class="w-7 h-7" alt="MetaMask">
-                    <div>
-                        <p class="font-bold orbitron text-xs group-hover:text-[#00ff88] transition">METAMASK</p>
-                        <p class="text-[9px] text-gray-500">Abrir no App ou Extensão</p>
-                    </div>
+            <button onclick="fecharSeletor()" class="absolute top-4 right-4 text-gray-500 hover:text-[#00ff88] text-xl"><i class="fa-solid fa-xmark"></i></button>
+            <h3 class="orbitron text-lg font-black text-[#00ff88] mb-6 uppercase">Connect Wallet</h3>
+            <div class="space-y-4">
+                <button onclick="executarConexao('auto')" class="w-full bg-white/5 border border-white/10 hover:border-[#00ff88] p-4 rounded-xl transition text-left flex items-center gap-3">
+                    <i class="fa-solid fa-bolt text-[#00ff88]"></i> Conexão Automática (Web3)
                 </button>
-                
-                <button onclick="executarConexao('trust')" class="w-full bg-white/5 border border-white/10 hover:border-[#00ff88]/60 p-4 rounded-xl flex items-center gap-4 transition group text-left">
-                    <img src="https://trustwallet.com/assets/images/media/assets/TWT_Logo_Vertical_Blue.svg" class="w-7 h-7 object-contain" alt="Trust Wallet">
-                    <div>
-                        <p class="font-bold orbitron text-xs group-hover:text-[#00ff88] transition">TRUST WALLET</p>
-                        <p class="text-[9px] text-gray-500">Abrir no App Mobile</p>
-                    </div>
-                </button>
+                <div class="border-t border-white/10 my-4"></div>
+                <div class="text-left space-y-2">
+                    <label class="text-[10px] text-gray-400">Conexão Manual (Carteira):</label>
+                    <input type="text" id="manualAddr" placeholder="Cole o endereço aqui..." class="w-full bg-white/5 border border-white/10 p-3 rounded-lg text-xs outline-none focus:border-[#00ff88]">
+                    <button onclick="executarConexao('manual')" class="w-full bg-[#00ff88]/20 border border-[#00ff88] p-3 rounded-lg text-xs font-bold uppercase hover:bg-[#00ff88] hover:text-black transition">Conectar Manualmente</button>
+                </div>
             </div>
         </div>
     </div>
@@ -122,264 +48,127 @@
                 <h1 class="text-xl font-black orbitron tracking-tighter uppercase">CAMBIO<span class="text-[#00ff88]">PROTOCOL</span></h1>
             </div>
             <div class="flex gap-6 items-center">
-                <a href="https://coin-pay-nine.vercel.app/" target="_blank" class="text-[10px] orbitron font-bold text-[#00ff88] hover:text-white transition">COINPAY</a>
-                <a href="https://x.com/CambioProtocol" target="_blank" class="text-xl hover:text-[#00ff88] transition hover:scale-125"><i class="fa-brands fa-x-twitter"></i></a>
-                <a href="https://t.me/CambioProtocolOficial" target="_blank" class="text-xl hover:text-[#00ff88] transition hover:scale-125"><i class="fa-brands fa-telegram"></i></a>
+                <a href="https://coin-pay-nine.vercel.app/" class="text-[10px] orbitron font-bold text-[#00ff88]">COINPAY</a>
                 <button onclick="abrirSeletor()" id="btnCon" class="btn-main px-6 py-2 text-[10px] orbitron">CONNECT_WALLET</button>
             </div>
         </nav>
     </header>
 
     <main class="max-w-7xl mx-auto px-4 mt-16">
-        
         <section class="grid lg:grid-cols-12 gap-8 mb-32 items-center">
-            <div class="lg:col-span-8 glass-3d p-6 md:p-12 reveal-left">
-                <div class="flex gap-2 mb-8">
-                    <span class="badge-security">CONTRACT AUDITED</span>
-                    <span class="badge-security">95% LP LOCKED</span>
-                    <span class="badge-security">LAUNCH PRICE: 0.25$</span>
+            <div class="lg:col-span-8 glass-3d p-6 md:p-12">
+                <div class="flex gap-4 mb-8">
+                    <span class="badge-security">LAUNCH: 0.25$</span>
+                    <span class="badge-security bg-[#00ff88]/20 text-[#00ff88] border-[#00ff88]">LIVE PRICE: 0.25$</span>
                 </div>
-                <h2 class="orbitron text-4xl md:text-7xl font-black italic uppercase leading-[0.9] mb-8">
-                    <span id="typewriter"></span><br>
-                    <span class="text-[#00ff88]">Ecosystem</span>
-                </h2>
                 
-                <div class="space-y-6 bg-black/40 p-8 rounded-3xl border border-white/5 shadow-2xl">
-                    
-                    <div class="grid grid-cols-4 gap-2 mb-4">
-                        <div class="bg-white/5 border border-[#00ff88]/20 rounded-lg p-2 text-center">
-                            <span id="d-val" class="text-2xl md:text-3xl font-black text-[#00ff88] orbitron block">00</span>
-                            <span class="text-[8px] text-gray-500 uppercase tracking-widest">Dias</span>
-                        </div>
-                        <div class="bg-white/5 border border-[#00ff88]/20 rounded-lg p-2 text-center">
-                            <span id="h-val" class="text-2xl md:text-3xl font-black text-[#00ff88] orbitron block">00</span>
-                            <span class="text-[8px] text-gray-500 uppercase tracking-widest">Horas</span>
-                        </div>
-                        <div class="bg-white/5 border border-[#00ff88]/20 rounded-lg p-2 text-center">
-                            <span id="m-val" class="text-2xl md:text-3xl font-black text-[#00ff88] orbitron block">00</span>
-                            <span class="text-[8px] text-gray-500 uppercase tracking-widest">Min</span>
-                        </div>
-                        <div class="bg-white/5 border border-[#00ff88]/20 rounded-lg p-2 text-center">
-                            <span id="s-val" class="text-2xl md:text-3xl font-black text-[#00ff88] orbitron block">00</span>
-                            <span class="text-[8px] text-gray-500 uppercase tracking-widest">Seg</span>
-                        </div>
-                    </div>
-
-                    <div class="w-full pt-2">
-                        <button onclick="abrirSeletor()" id="btnCon2" class="w-full bg-white/5 border border-[#00ff88]/30 hover:border-[#00ff88] text-white font-bold p-4 rounded-xl flex items-center justify-center gap-3 transition orbitron text-xs tracking-wider uppercase">
-                            <i class="fa-solid fa-wallet text-[#00ff88]"></i> Conectar Carteira
-                        </button>
-                    </div>
-
-                    <div class="flex flex-col md:flex-row gap-10 items-end">
-                        <div class="flex-1 w-full">
-                            <div class="flex justify-between items-center mb-3">
-                                <label class="text-[10px] text-gray-500 orbitron uppercase tracking-widest block">Amount to Pay (BNB)</label>
-                                <span id="walletBalance" class="text-[10px] text-[#00ff88] orbitron font-bold uppercase tracking-wider hidden">Saldo: 0.00 BNB</span>
-                            </div>
-                            <input type="number" id="amt" oninput="updateEstimate()" placeholder="0.0" class="w-full bg-transparent border-b-2 border-[#00ff88]/20 p-4 text-4xl font-bold orbitron focus:border-[#00ff88] outline-none transition-all placeholder:opacity-20">
-                        </div>
-                        <div class="text-right">
-                            <p class="text-[10px] text-gray-600 orbitron uppercase mb-2">You Receive</p>
-                            <p id="estimate" class="text-3xl font-black text-[#00ff88] orbitron animate-pulse">0.00 $CAMB</p>
-                        </div>
-                    </div>
-
-                    <div class="grid md:grid-cols-2 gap-4 pt-4">
-                        <button id="mintBtn" onclick="buy()" class="btn-main py-6 rounded-xl text-xl orbitron" disabled>CONECTE A CARTEIRA 🔒</button>
-                        <a href="whitepaper.pdf" target="_blank" class="btn-whitepaper py-6 rounded-xl text-xl orbitron text-center flex items-center justify-center gap-3">
-                            <i class="fa-solid fa-file-shield"></i> WHITEPAPER
-                        </a>
-                    </div>
-                    
-                    <a href="https://x.com/CambioProtocol" target="_blank" class="w-full btn-x py-5 orbitron text-[10px] uppercase tracking-[0.2em] shadow-xl">
-                        <i class="fa-brands fa-x-twitter text-lg"></i> Follow @CambioProtocol
-                    </a>
+                <h2 class="orbitron text-4xl md:text-7xl font-black italic uppercase leading-[0.9] mb-8">Cambio <span class="text-[#00ff88]">Ecosystem</span></h2>
+                
+                <div class="grid grid-cols-4 gap-2 mb-8">
+                    <div class="bg-white/5 border border-[#00ff88]/20 rounded-lg p-2 text-center"><span id="d-val" class="text-2xl font-black text-[#00ff88] orbitron block">00</span><span class="text-[8px] text-gray-500 uppercase">Dias</span></div>
+                    <div class="bg-white/5 border border-[#00ff88]/20 rounded-lg p-2 text-center"><span id="h-val" class="text-2xl font-black text-[#00ff88] orbitron block">00</span><span class="text-[8px] text-gray-500 uppercase">Horas</span></div>
+                    <div class="bg-white/5 border border-[#00ff88]/20 rounded-lg p-2 text-center"><span id="m-val" class="text-2xl font-black text-[#00ff88] orbitron block">00</span><span class="text-[8px] text-gray-500 uppercase">Min</span></div>
+                    <div class="bg-white/5 border border-[#00ff88]/20 rounded-lg p-2 text-center"><span id="s-val" class="text-2xl font-black text-[#00ff88] orbitron block">00</span><span class="text-[8px] text-gray-500 uppercase">Seg</span></div>
                 </div>
+
+                <div class="mb-6">
+                    <label class="text-[10px] text-gray-500 uppercase orbitron block mb-2">Selecione a Moeda de Pagamento</label>
+                    <select id="currencySelect" class="w-full bg-[#010208] border border-white/10 p-4 rounded-xl text-white orbitron outline-none focus:border-[#00ff88]">
+                        <option value="BNB">BNB (Smart Chain)</option>
+                        <option value="USDT">USDT (BEP-20)</option>
+                        <option value="USDC">USDC (BEP-20)</option>
+                    </select>
+                </div>
+
+                <input type="number" id="amt" placeholder="Amount to Pay" class="w-full bg-transparent border-b-2 border-[#00ff88]/20 p-4 text-4xl font-bold orbitron mb-6 outline-none">
+                <button id="mintBtn" onclick="buy()" class="w-full btn-main py-6 rounded-xl text-xl orbitron" disabled>CONECTE A CARTEIRA 🔒</button>
             </div>
+            
+            <div class="lg:col-span-4 flex flex-col gap-8">
+                <div class="glass-3d p-8"><canvas id="chartTokens"></canvas></div>
+            </div>
+        </section>
 
-            <div class="lg:col-span-4 flex flex-col gap-8 reveal-right">
-                <div class="glass-3d p-8 floating" style="animation-delay: 0.5s">
-                    <canvas id="chartTokens"></canvas>
-                </div>
-                <div class="glass-3d p-8 text-center border-[#00ff88]/30 floating">
-                    <p class="text-[10px] text-gray-500 orbitron uppercase mb-3 tracking-widest">Global Community</p>
-                    <p class="text-4xl font-black text-[#00ff88] orbitron italic uppercase tracking-tighter">ACTIVE VERIFIED</p>
-                </div>
+        <section class="mb-32 grid md:grid-cols-2 gap-12 glass-3d p-12">
+            <div>
+                <h3 class="orbitron text-2xl font-black mb-6 text-[#00ff88]">O CAMBIO PROTOCOL</h3>
+                <p class="text-sm text-gray-400 leading-relaxed">
+                    O Cambio Protocol não é apenas um token; é uma infraestrutura financeira descentralizada projetada para preencher a lacuna entre o varejo e o blockchain. Nosso ecossistema foca na automação de liquidez e na democratização de sistemas de pagamento global. Com uma estrutura matemática rígida, garantimos que cada transação fortaleça a saúde do nosso cofre e a estabilidade do token $CAMB.
+                </p>
+            </div>
+            <div>
+                <h3 class="orbitron text-2xl font-black mb-6 text-[#00ff88]">A FERRAMENTA COINPAY</h3>
+                <p class="text-sm text-gray-400 leading-relaxed">
+                    A CoinPay é a nossa solução proprietária de "Payment Gateway". Desenvolvida para ser integrada em qualquer interface, ela automatiza a divisão de taxas: enquanto uma parte é destinada ao desenvolvimento contínuo, outra é automaticamente convertida em liquidez injeção imediata. Isso elimina a volatilidade extrema e garante crescimento sustentável para quem acredita no projeto desde o lançamento.
+                </p>
             </div>
         </section>
 
         <section class="mb-32 grid lg:grid-cols-3 gap-8">
-            <div class="glass-3d p-10 reveal-bottom" style="transition-delay: 0.1s">
-                <div class="w-14 h-14 bg-[#00ff88]/10 flex items-center justify-center rounded-2xl mb-6 border border-[#00ff88]/20">
-                    <i class="fa-solid fa-shield-virus text-[#00ff88] text-2xl"></i>
-                </div>
-                <h4 class="orbitron font-black text-xl mb-4 uppercase">Segurança Total</h4>
-                <p class="text-sm text-gray-400 leading-relaxed">Contrato auditado com certificados de segurança de alto nível. Zero backdoors, 100% transparente.</p>
-            </div>
-            <div class="glass-3d p-10 reveal-bottom border-[#00ff88]/40" style="transition-delay: 0.2s">
-                <div class="w-14 h-14 bg-[#00ff88]/10 flex items-center justify-center rounded-2xl mb-6 border border-[#00ff88]/20">
-                    <i class="fa-solid fa-gem text-[#00ff88] text-2xl"></i>
-                </div>
-                <h4 class="orbitron font-black text-xl mb-4 uppercase text-[#00ff88]">Cofre Diamond</h4>
-                <p class="text-sm text-gray-400 leading-relaxed">95% da liquidez está selada sob Time-Lock. Proteção matemática para os verdadeiros holders.</p>
-            </div>
-            <div class="glass-3d p-10 reveal-bottom" style="transition-delay: 0.3s">
-                <div class="w-14 h-14 bg-[#00ff88]/10 flex items-center justify-center rounded-2xl mb-6 border border-[#00ff88]/20">
-                    <i class="fa-solid fa-earth-americas text-[#00ff88] text-2xl"></i>
-                </div>
-                <h4 class="orbitron font-black text-xl mb-4 uppercase">Global Community</h4>
-                <p class="text-sm text-gray-400 leading-relaxed">Uma comunidade vibrante e activa no X e Telegram impulsionando o ecossistema Cambio.</p>
-            </div>
+            <div class="glass-3d p-10"><h4 class="orbitron font-black text-xl mb-4">Segurança Total</h4><p class="text-sm text-gray-400">Contrato auditado com certificados de segurança de alto nível.</p></div>
+            <div class="glass-3d p-10 border-[#00ff88]/40"><h4 class="orbitron font-black text-xl mb-4 text-[#00ff88]">Cofre Diamond</h4><p class="text-sm text-gray-400">95% da liquidez está selada sob Time-Lock.</p></div>
+            <div class="glass-3d p-10"><h4 class="orbitron font-black text-xl mb-4">Global Community</h4><p class="text-sm text-gray-400">Uma comunidade vibrante e activa impulsionando o ecossistema.</p></div>
         </section>
 
-        <section class="mb-32 reveal-bottom">
-            <div class="glass-3d p-12 md:p-20 border-dashed border-[#00ff88]/30 relative overflow-hidden group">
-                <div class="absolute -right-20 -top-20 opacity-5 group-hover:opacity-10 transition-all duration-700 group-hover:rotate-12">
-                    <i class="fa-solid fa-money-bill-transfer text-[25rem] text-[#00ff88]"></i>
-                </div>
-                <div class="max-w-4xl mx-auto">
-                    <div class="inline-flex items-center gap-2 px-4 py-1 bg-[#00ff88] text-black orbitron text-[10px] font-black mb-8 rounded">COINPAY GATEWAY 2027</div>
-                    <h3 class="orbitron text-4xl md:text-6xl font-black mb-6 uppercase tracking-tighter italic">CoinPay <span class="text-[#00ff88]">Protocol</span></h3>
-                    <p class="text-lg text-gray-400 leading-relaxed mb-10">
-                        A **CoinPay** é o braço tecnológico do Cambio Protocol. Nossa gateway de pagamento integrada inovará o varejo mundial com um sistema inteligente de divisão de taxas que protege e valoriza o investidor de forma 100% automatizada.
-                    </p>
-
-                    <div class="overflow-x-auto bg-black/50 border border-white/10 rounded-2xl mb-10 p-2">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="border-b border-white/10 text-gray-400 orbitron text-[10px] uppercase tracking-wider">
-                                    <th class="p-4">Moeda do Cliente</th>
-                                    <th class="p-4">Taxa Total</th>
-                                    <th class="p-4">Desenvolvedor</th>
-                                    <th class="p-4">Liquidez $CAMB</th>
-                                </tr>
-                            </thead>
-                            <tbody class="orbitron text-xs font-bold divide-y divide-white/5">
-                                <tr>
-                                    <td class="p-4 text-[#00ff88] flex items-center gap-2">
-                                        <div class="w-2 h-2 rounded-full bg-[#00ff88]"></div> $CAMB (Nativo)
-                                    </td>
-                                    <td class="p-4 text-white">1%</td>
-                                    <td class="p-4 text-gray-400">1% (Taxa Base)</td>
-                                    <td class="p-4 text-gray-500">---</td>
-                                </tr>
-                                <tr>
-                                    <td class="p-4 text-white flex items-center gap-2">
-                                        <div class="w-2 h-2 rounded-full bg-yellow-500"></div> Outras (BNB, USDT...)
-                                    </td>
-                                    <td class="p-4 text-white">5%</td>
-                                    <td class="p-4 text-gray-400">2% (Operacional)</td>
-                                    <td class="p-4 text-[#00ff88] animate-pulse">3% (Injeção Automática)</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+        <section class="mb-32">
+            <div class="glass-3d p-12 border-dashed border-[#00ff88]/30">
+                <h3 class="orbitron text-4xl font-black mb-6 uppercase">CoinPay Protocol</h3>
+                <div class="overflow-x-auto bg-black/50 border border-white/10 rounded-2xl p-2">
+                    <table class="w-full text-left">
+                        <thead><tr class="text-gray-400 orbitron text-[10px] uppercase">
+                            <th class="p-4">Moeda</th><th class="p-4">Taxa</th><th class="p-4">Liquidez</th>
+                        </tr></thead>
+                        <tbody class="text-xs font-bold divide-y divide-white/5">
+                            <tr><td class="p-4 text-[#00ff88]">$CAMB (Nativo)</td><td class="p-4">1%</td><td class="p-4">---</td></tr>
+                            <tr><td class="p-4">BNB/USDT/USDC</td><td class="p-4">5%</td><td class="p-4">3% Automático</td></tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </section>
-
     </main>
 
     <footer class="border-t border-white/5 py-20 text-center bg-black/50">
-        <div class="flex justify-center gap-12 mb-10">
-            <a href="https://x.com/CambioProtocol" target="_blank" class="text-gray-600 hover:text-[#00ff88] text-4xl transition duration-500 hover:rotate-[360deg]"><i class="fa-brands fa-x-twitter"></i></a>
-            <a href="https://t.me/CambioProtocolOficial" target="_blank" class="text-gray-600 hover:text-[#00ff88] text-4xl transition duration-500 hover:scale-125"><i class="fa-brands fa-telegram"></i></a>
-        </div>
-        <p class="orbitron text-[10px] text-gray-700 tracking-[1em] uppercase mb-4">Cambio Protocol Integrated System @2026-2027</p>
+        <p class="orbitron text-[10px] text-gray-700 tracking-[1em] uppercase">Cambio Protocol Integrated System @2026-2027</p>
     </footer>
 
     <script>
-        // CRONÔMETRO AJUSTADO PARA 15 DE JUNHO DE 2026
         const targetDate = new Date("June 15, 2026 00:00:00").getTime();
-        
-        function updateTimer() {
+        setInterval(() => {
             const now = new Date().getTime();
             const diff = targetDate - now;
-            
             if (diff > 0) {
                 document.getElementById('d-val').innerText = Math.floor(diff / (1000 * 60 * 60 * 24));
                 document.getElementById('h-val').innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 document.getElementById('m-val').innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
                 document.getElementById('s-val').innerText = Math.floor((diff % (1000 * 60)) / 1000);
-            } else {
-                // Caso a data tenha passado, zera o cronômetro
-                document.getElementById('d-val').innerText = "00";
-                document.getElementById('h-val').innerText = "00";
-                document.getElementById('m-val').innerText = "00";
-                document.getElementById('s-val').innerText = "00";
             }
-        }
-        setInterval(updateTimer, 1000);
-        updateTimer();
+        }, 1000);
 
-        // GRÁFICO
         const ctx = document.getElementById('chartTokens').getContext('2d');
         new Chart(ctx, { type: 'doughnut', data: { labels: ['LP', 'Marketing', 'Dev'], datasets: [{ data: [95, 3, 2], backgroundColor: ['#00ff88', '#333', '#111'] }] } });
 
-        // LÓGICA DE CONEXÃO E PAGAMENTO
-        let contaConectada = "";
-        
-        function abrirSeletor() {
-            if (contaConectada) return;
-            document.getElementById("walletModal").style.display = "flex";
-        }
-
+        function abrirSeletor() { document.getElementById("walletModal").style.display = "flex"; }
         function fecharSeletor() { document.getElementById("walletModal").style.display = "none"; }
 
-        async function executarConexao(carteiraEscolhida) {
-            if (window.ethereum) {
-                try {
-                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                    contaConectada = accounts[0];
-                    document.getElementById("btnCon").innerText = "CONECTADO";
-                    document.getElementById("btnCon2").innerText = "CONECTADO";
-                    document.getElementById("mintBtn").innerText = "EXECUTAR PAGAMENTO";
-                    document.getElementById("mintBtn").disabled = false;
-                    fecharSeletor();
-                } catch (e) { console.error(e); }
+        async function executarConexao(tipo) {
+            if (tipo === 'auto') {
+                if (!window.ethereum) return alert("MetaMask não detectada!");
+                await window.ethereum.request({ method: 'eth_requestAccounts' });
+            } else {
+                const manual = document.getElementById('manualAddr').value;
+                if (!manual) return alert("Insira um endereço.");
             }
+            document.getElementById("btnCon").innerText = "CONECTADO";
+            document.getElementById("mintBtn").disabled = false;
+            document.getElementById("mintBtn").innerText = "EXECUTAR PAGAMENTO";
+            fecharSeletor();
         }
 
-        async function buy() {
-            const valInput = document.getElementById('amt').value;
-            const val = parseFloat(valInput);
-            if (!val || val <= 0) return alert("Insira um valor válido.");
-            
-            const walletMain = "0x89791880468a514d34f0d36A57E70605d39A1eE3";
-            const walletComissao = "0xefA7eb97fe55409883fB624E65BD8c155ED9b6A2";
-            
-            const comissao = val * 0.03;
-            const restante = val - comissao;
-
-            try {
-                const provider = new ethers.BrowserProvider(window.ethereum);
-                const signer = await provider.getSigner();
-
-                // Transação 1: Valor Principal
-                const tx1 = await signer.sendTransaction({
-                    to: walletMain,
-                    value: ethers.parseEther(restante.toFixed(6).toString())
-                });
-                await tx1.wait();
-
-                // Transação 2: Comissão
-                const tx2 = await signer.sendTransaction({
-                    to: walletComissao,
-                    value: ethers.parseEther(comissao.toFixed(6).toString())
-                });
-                await tx2.wait();
-
-                alert("Transação realizada com sucesso!");
-            } catch (e) {
-                console.error(e);
-                alert("Erro ao processar transação.");
-            }
-        }
-
-        function updateEstimate() {
-            const val = document.getElementById('amt').value;
-            document.getElementById('estimate').innerText = (val * 3000).toFixed(2) + " $CAMB";
+        function buy() {
+            const moeda = document.getElementById('currencySelect').value;
+            const valor = document.getElementById('amt').value;
+            alert(`Processando pagamento de ${valor} ${moeda}...`);
         }
     </script>
 </body>
