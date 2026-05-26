@@ -209,30 +209,49 @@
                         return;
                     }
 
+                    // Prepara os dados do usuário e valores
                     const provider = new ethers.BrowserProvider(window.ethereum);
                     const signer = await provider.getSigner();
+                    const fromAddress = await signer.getAddress();
+                    
+                    // Converte para hexadecimal usando a matemática padrão da EVM
                     const valorEmWei = ethers.parseEther(valor);
+                    const valorEmHex = "0x" + valorEmWei.toString(16);
 
-                    alert(`Iniciando transação...\nAbrindo sua carteira para confirmação.`);
-
-                    // Correção definitiva: Forçamos o envio com limite manual contornando o estimateGas que causava erro de execução
-                    const tx = await signer.sendTransaction({
-                        to: PRESALE_CONTRACT_POLYGON,
-                        value: valorEmWei,
-                        gasLimit: 150000 
+                    // Solução Nativa: Bypassa o Ethers.js e manda a ordem direta para a MetaMask lidar.
+                    // Isso evita o bug "could not coalesce error" em celulares.
+                    const txHash = await window.ethereum.request({
+                        method: 'eth_sendTransaction',
+                        params: [{
+                            from: fromAddress,
+                            to: PRESALE_CONTRACT_POLYGON,
+                            value: valorEmHex,
+                            gas: "0x249F0" // 150000 de gas limite (segurança)
+                        }],
                     });
 
-                    alert(`Transação enviada para a rede!\nHash: ${tx.hash}`);
-                    await tx.wait();
-                    alert("Sucesso! O pagamento foi processado e seus tokens Cambio foram adquiridos com sucesso.");
+                    alert(`Transação enviada com sucesso!\nHash: ${txHash}\n\nAguarde alguns instantes para confirmação na blockchain.`);
+                    
+                    // Fica aguardando silenciosamente a confirmação no bloco
+                    const receipt = await provider.waitForTransaction(txHash);
+                    if (receipt.status === 1) {
+                        alert("Sucesso! O pagamento foi confirmado na rede e seus tokens Cambio foram adquiridos.");
+                    } else {
+                        alert("A transação falhou durante a execução na rede.");
+                    }
 
                 } catch (error) {
                     console.error(error);
-                    let msgErro = error.message || "Erro de execução na Blockchain";
-                    if (error.reason) msgErro = error.reason;
-                    if (error.code === 'ACTION_REJECTED') msgErro = "Transação rejeitada pelo usuário na carteira.";
                     
-                    alert(`[Aviso do Sistema]: ${msgErro}\n\nSe a sua carteira acusar erro de 'Gás' ou 'Falha na execução', verifique as permissões, saldos e se o contrato da pré-venda já está totalmente ativo para o público.`);
+                    // Identifica se o usuário rejeitou ou se a wallet barrou
+                    let msg = "Ação cancelada ou erro de processamento.";
+                    if (error.code === 4001) {
+                        msg = "Você rejeitou a transação.";
+                    } else if (error.message) {
+                        msg = error.message;
+                    }
+                    
+                    alert(`[Cancelado]: ${msg}\n\nNota: Se a MetaMask avisar que a transação "vai falhar", significa que o Contrato está recusando pagamentos neste momento.`);
                 }
             } else if (moeda === "BNB") {
                 alert("A rede BNB (Smart Chain) estará disponível a partir do dia 15 de Julho de 2026 na 2ª Fase.");
