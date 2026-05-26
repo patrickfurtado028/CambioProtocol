@@ -120,13 +120,17 @@
         <section class="mb-32">
             <div class="glass-3d p-12 border-dashed border-[#00ff88]/30">
                 <h3 class="orbitron text-4xl font-black mb-6 uppercase">CoinPay Protocol</h3>
-                <table class="w-full text-left">
-                    <thead><tr class="text-gray-400 orbitron text-[10px] uppercase"><th class="p-4">Moeda / Rede</th><th class="p-4">Taxa</th><th class="p-4">Liquidez</th></tr></thead>
-                    <tbody class="text-xs font-bold divide-y divide-white/5">
-                        <tr><td class="p-4 text-[#00ff88]">$CAMB (Nativo)</td><td class="p-4">1%</td><td class="p-4">---</td></tr>
-                        <tr><td class="p-4">POL (Fase 1)</td><td class="p-4">5%</td><td class="p-4">3% Automático</td></tr>
-                    </tbody>
-                </table>
+                <div class="overflow-x-auto bg-black/50 border border-white/10 rounded-2xl p-2">
+                    <table class="w-full text-left">
+                        <thead><tr class="text-gray-400 orbitron text-[10px] uppercase">
+                            <th class="p-4">Moeda / Rede</th><th class="p-4">Taxa</th><th class="p-4">Liquidez</th>
+                        </tr></thead>
+                        <tbody class="text-xs font-bold divide-y divide-white/5">
+                            <tr><td class="p-4 text-[#00ff88]">$CAMB (Nativo)</td><td class="p-4">1%</td><td class="p-4">---</td></tr>
+                            <tr><td class="p-4">POL (Fase 1) / BNB (Fase 2)</td><td class="p-4">5%</td><td class="p-4">3% Automático</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </section>
     </main>
@@ -139,30 +143,67 @@
         const TOKEN_CONTRACT_POLYGON = "0xeFf80c7A04CAF0142007856803Ae923E193835F7";
         const PRESALE_CONTRACT_POLYGON = "0x0cf1ceff15acde8e6becd592dfac207222d5a4c9";
 
-        // Funções de script mantidas com a correção do contrato
-        async function buy() {
-            const valor = document.getElementById('amt').value;
-            try {
-                const provider = new ethers.BrowserProvider(window.ethereum);
-                const signer = await provider.getSigner();
-                const contract = new ethers.Contract(PRESALE_CONTRACT_POLYGON, ["function comprarTokens() payable"], signer);
-                const tx = await contract.comprarTokens({ value: ethers.parseEther(valor) });
-                alert("Transação enviada: " + tx.hash);
-            } catch (e) { alert("Erro na chamada: " + e.message); }
-        }
+        // Cronômetro
+        const targetDate = new Date("July 15, 2026 00:00:00").getTime();
+        setInterval(() => {
+            const now = new Date().getTime();
+            const diff = targetDate - now;
+            if (diff > 0) {
+                document.getElementById('d-val').innerText = Math.floor(diff / (1000 * 60 * 60 * 24));
+                document.getElementById('h-val').innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                document.getElementById('m-val').innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                document.getElementById('s-val').innerText = Math.floor((diff % (1000 * 60)) / 1000);
+            }
+        }, 1000);
+
+        const ctx = document.getElementById('chartTokens').getContext('2d');
+        new Chart(ctx, { type: 'doughnut', data: { labels: ['LP', 'Marketing', 'Dev'], datasets: [{ data: [95, 3, 2], backgroundColor: ['#00ff88', '#333', '#111'] }] } });
 
         async function adicionarToken() {
-            window.ethereum.request({ method: 'wallet_watchAsset', params: { type: 'ERC20', options: { address: TOKEN_CONTRACT_POLYGON, symbol: 'CAMB', decimals: 18 } } });
+            if (!window.ethereum) return alert("Carteira não detectada.");
+            try {
+                await window.ethereum.request({
+                    method: 'wallet_watchAsset',
+                    params: { type: 'ERC20', options: { address: TOKEN_CONTRACT_POLYGON, symbol: 'CAMB', decimals: 18 } }
+                });
+            } catch (e) { alert("Erro ao adicionar token."); }
         }
 
         function abrirSeletor() { document.getElementById("walletModal").style.display = "flex"; }
         function fecharSeletor() { document.getElementById("walletModal").style.display = "none"; }
         
-        async function executarConexao(tipo) {
-            await window.ethereum.request({ method: 'eth_requestAccounts' });
-            document.getElementById("btnCon").innerText = "CONECTADO";
-            document.getElementById("mintBtn").disabled = false;
-            fecharSeletor();
+        async function executarConexao() {
+            if (!window.ethereum) return alert("Instale a MetaMask ou use o navegador da carteira!");
+            try {
+                await window.ethereum.request({ method: 'eth_requestAccounts' });
+                document.getElementById("btnCon").innerText = "CONECTADO";
+                document.getElementById("mintBtn").disabled = false;
+                document.getElementById("mintBtn").innerText = "EXECUTAR PAGAMENTO";
+                fecharSeletor();
+            } catch (e) { alert("Conexão cancelada."); }
+        }
+
+        async function buy() {
+            const valor = document.getElementById('amt').value;
+            if (!valor || valor <= 0) return alert("Insira uma quantidade válida.");
+            
+            try {
+                const provider = new ethers.BrowserProvider(window.ethereum);
+                const signer = await provider.getSigner();
+                // A correção vital: definir a ABI explicitamente como array, que é o padrão do ethers v6
+                const abi = ["function comprarTokens() payable"];
+                const contract = new ethers.Contract(PRESALE_CONTRACT_POLYGON, abi, signer);
+                
+                // Chamada direta à função do contrato
+                const tx = await contract.comprarTokens({ 
+                    value: ethers.parseEther(valor) 
+                });
+                
+                alert("Transação enviada! Hash: " + tx.hash);
+            } catch (e) { 
+                console.error(e);
+                alert("Erro ao executar: Verifique se você está na rede Polygon correta e possui saldo. Detalhe: " + e.message); 
+            }
         }
     </script>
 </body>
