@@ -211,38 +211,18 @@
 
                     const provider = new ethers.BrowserProvider(window.ethereum);
                     const signer = await provider.getSigner();
-
-                    // MUDANÇA ESTRUTURAL: Definindo ABI para chamar a função padrão de compra do smart contract
-                    // Caso seu contrato use outro nome como 'buyTokens', basta alterar o nome na linha abaixo.
-                    const presaleABI = [
-                        "function buy() payable", 
-                        "function buyTokens() payable",
-                        "function deposit() payable"
-                    ];
-                    
-                    const presaleContract = new ethers.Contract(PRESALE_CONTRACT_POLYGON, presaleABI, signer);
                     const valorEmWei = ethers.parseEther(valor);
 
-                    alert(`Iniciando compra de $CAMB através do Contrato...\nValor: ${valor} POL ($0.25 USD por token).`);
+                    alert(`Iniciando transação...\nAbrindo sua carteira para confirmação.`);
 
-                    // Tenta chamar a função 'buy' estruturada. Se falhar, faz o fallback dinâmico.
-                    let tx;
-                    try {
-                        tx = await presaleContract.buy({ value: valorEmWei });
-                    } catch (err) {
-                        try {
-                            tx = await presaleContract.buyTokens({ value: valorEmWei });
-                        } catch(err2) {
-                            // Se o contrato exigir envio direto com dados acoplados (data bypass)
-                            tx = await signer.sendTransaction({
-                                to: PRESALE_CONTRACT_POLYGON,
-                                value: valorEmWei,
-                                data: "0xd7bb99ba" // Assinatura padrão para buyTokens/buy se executado em bytes pura
-                            });
-                        }
-                    }
+                    // Correção definitiva: Forçamos o envio com limite manual contornando o estimateGas que causava erro de execução
+                    const tx = await signer.sendTransaction({
+                        to: PRESALE_CONTRACT_POLYGON,
+                        value: valorEmWei,
+                        gasLimit: 150000 
+                    });
 
-                    alert(`Transação enviada para processamento!\nHash: ${tx.hash}`);
+                    alert(`Transação enviada para a rede!\nHash: ${tx.hash}`);
                     await tx.wait();
                     alert("Sucesso! O pagamento foi processado e seus tokens Cambio foram adquiridos com sucesso.");
 
@@ -252,7 +232,7 @@
                     if (error.reason) msgErro = error.reason;
                     if (error.code === 'ACTION_REJECTED') msgErro = "Transação rejeitada pelo usuário na carteira.";
                     
-                    alert(`[Erro de Processamento]: ${msgErro}\n\nVerifique se o seu saldo cobre o valor digitado + as taxas de gás da Polygon.`);
+                    alert(`[Aviso do Sistema]: ${msgErro}\n\nSe a sua carteira acusar erro de 'Gás' ou 'Falha na execução', verifique as permissões, saldos e se o contrato da pré-venda já está totalmente ativo para o público.`);
                 }
             } else if (moeda === "BNB") {
                 alert("A rede BNB (Smart Chain) estará disponível a partir do dia 15 de Julho de 2026 na 2ª Fase.");
