@@ -60,7 +60,6 @@
                 <div class="flex gap-4 mb-8 flex-wrap">
                     <span class="badge-security">FASE 1: LOTE DE 5.000.000 $CAMB (ATIVO) 🚀</span>
                     <span class="badge-security bg-[#00ff88]/20 text-[#00ff88] border-[#00ff88]">COTAÇÃO: $0.25 USD / TOKEN</span>
-                    <span class="badge-security bg-white/5 text-gray-400 border-white/10">PRÓXIMA FASE: BNB EM 15 DE JULHO</span>
                 </div>
                 
                 <h2 class="orbitron text-4xl md:text-7xl font-black italic uppercase leading-[0.9] mb-8">Cambio <span class="text-[#00ff88]">Ecosystem</span></h2>
@@ -73,12 +72,8 @@
                 </div>
 
                 <div class="mb-6">
-                    <label class="text-[10px] text-gray-500 uppercase orbitron block mb-2">Selecione a Moeda de Pagamento</label>
                     <select id="currencySelect" class="w-full bg-[#010208] border border-white/10 p-4 rounded-xl text-white orbitron outline-none focus:border-[#00ff88]">
                         <option value="POL">POL / MATIC (Polygon Presale - LIVE)</option>
-                        <option value="BNB">BNB (Smart Chain - Liberado na 2ª Fase)</option>
-                        <option value="USDT">USDT (BEP-20 - Brevemente)</option>
-                        <option value="USDC">USDC (BEP-20 - Brevemente)</option>
                     </select>
                 </div>
 
@@ -86,15 +81,6 @@
                 <div id="outputTokens" class="text-[#00ff88] font-bold text-sm mb-6 orbitron italic">Você receberá: 0 $CAMB</div>
 
                 <button id="mintBtn" onclick="buy()" class="w-full btn-main py-6 rounded-xl text-xl orbitron" disabled>CONECTE A CARTEIRA 🔒</button>
-                
-                <div class="flex gap-4 mt-6">
-                    <a href="https://polygonscan.com/token/0xeFf80c7A04CAF0142007856803Ae923E193835F7" target="_blank" class="bg-white/5 border border-[#00ff88]/30 px-6 py-3 rounded-xl text-[10px] orbitron font-bold hover:bg-[#00ff88] hover:text-black transition uppercase">
-                        <i class="fa-solid fa-magnifying-glass mr-2"></i> Ver no PolygonScan
-                    </a>
-                    <button onclick="adicionarToken()" class="bg-[#00ff88]/20 border border-[#00ff88] px-6 py-3 rounded-xl text-[10px] orbitron font-bold text-[#00ff88] hover:bg-[#00ff88] hover:text-black transition uppercase">
-                        <i class="fa-brands fa-ethereum mr-2"></i> Adicionar ao Wallet
-                    </button>
-                </div>
             </div>
             
             <div class="lg:col-span-4 flex flex-col gap-8">
@@ -102,21 +88,30 @@
             </div>
         </section>
 
-        <section class="mb-32 grid md:grid-cols-2 gap-12 glass-3d p-12">
-            <div>
-                <h3 class="orbitron text-2xl font-black mb-6 text-[#00ff88]">O CAMBIO PROTOCOL</h3>
-                <p class="text-sm text-gray-400 leading-relaxed">O Cambio Protocol não é apenas um token; é uma infraestrutura financeira descentralizada projetada para preencher a lacuna entre o varejo e o blockchain.</p>
+        <section class="mb-32">
+            <h3 class="orbitron text-3xl font-black text-center mb-12 uppercase text-[#00ff88]">Roadmap de Desenvolvimento</h3>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="glass-3d p-6 border-[#00ff88]/50">
+                    <span class="text-[#00ff88] font-bold text-xs">FASE 1</span>
+                    <h4 class="font-bold mt-2">Lançamento Presale</h4>
+                    <p class="text-xs text-gray-400 mt-2">Tokenização inicial e liquidez de entrada.</p>
+                </div>
+                <div class="glass-3d p-6">
+                    <span class="text-gray-500 font-bold text-xs">FASE 2</span>
+                    <h4 class="font-bold mt-2">Integrar BNB</h4>
+                    <p class="text-xs text-gray-400 mt-2">Cross-chain bridge e expansão de mercado.</p>
+                </div>
+                <div class="glass-3d p-6">
+                    <span class="text-gray-500 font-bold text-xs">FASE 3</span>
+                    <h4 class="font-bold mt-2">CoinPay Gateway</h4>
+                    <p class="text-xs text-gray-400 mt-2">Pagamentos automáticos e automação.</p>
+                </div>
+                <div class="glass-3d p-6">
+                    <span class="text-gray-500 font-bold text-xs">FASE 4</span>
+                    <h4 class="font-bold mt-2">Global Scale</h4>
+                    <p class="text-xs text-gray-400 mt-2">Parcerias estratégicas e listagens.</p>
+                </div>
             </div>
-            <div>
-                <h3 class="orbitron text-2xl font-black mb-6 text-[#00ff88]">A FERRAMENTA COINPAY</h3>
-                <p class="text-sm text-gray-400 leading-relaxed">A CoinPay é a nossa solução proprietária de "Payment Gateway". Desenvolvida para ser integrada em qualquer interface, ela automatiza a divisão de taxas.</p>
-            </div>
-        </section>
-
-        <section class="mb-32 grid lg:grid-cols-3 gap-8">
-            <div class="glass-3d p-10"><h4 class="orbitron font-black text-xl mb-4">Segurança Total</h4><p class="text-sm text-gray-400">Contrato auditado com certificados de segurança.</p></div>
-            <div class="glass-3d p-10 border-[#00ff88]/40"><h4 class="orbitron font-black text-xl mb-4 text-[#00ff88]">Cofre Diamond</h4><p class="text-sm text-gray-400">95% da liquidez selada.</p></div>
-            <div class="glass-3d p-10"><h4 class="orbitron font-black text-xl mb-4">Global Community</h4><p class="text-sm text-gray-400">Uma comunidade vibrante e activa.</p></div>
         </section>
     </main>
 
@@ -127,10 +122,6 @@
     <script>
         const TOKEN_CONTRACT_POLYGON = "0xeFf80c7A04CAF0142007856803Ae923E193835F7";
         const PRESALE_CONTRACT_POLYGON = "0x0cf1ceff15acde8e6becd592dfac207222d5a4c9";
-        
-        // --- CONFIGURAÇÃO DE PREÇO ---
-        // Se 1 $CAMB = $0.25 e 1 POL = ~$1.00 (Exemplo), o cliente ganha 4 tokens por 1 POL.
-        // Ajuste o "RATIO" abaixo conforme o preço do seu token no contrato.
         const RATIO_POL_TO_CAMB = 4; 
 
         function calcularTokens() {
@@ -141,37 +132,18 @@
             output.innerText = `Você receberá: ${recebido.toLocaleString()} $CAMB`;
         }
 
-        // Cronômetro
-        const targetDate = new Date("July 15, 2026 00:00:00").getTime();
-        setInterval(() => {
-            const now = new Date().getTime();
-            const diff = targetDate - now;
-            if (diff > 0) {
-                document.getElementById('d-val').innerText = Math.floor(diff / (1000 * 60 * 60 * 24));
-                document.getElementById('h-val').innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                document.getElementById('m-val').innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                document.getElementById('s-val').innerText = Math.floor((diff % (1000 * 60)) / 1000);
-            }
-        }, 1000);
-
-        const ctx = document.getElementById('chartTokens').getContext('2d');
-        new Chart(ctx, { type: 'doughnut', data: { labels: ['LP', 'Marketing', 'Dev'], datasets: [{ data: [95, 3, 2], backgroundColor: ['#00ff88', '#333', '#111'] }] } });
-
-        async function adicionarToken() {
-            if (!window.ethereum) return alert("Carteira não detectada.");
-            try {
-                await window.ethereum.request({
-                    method: 'wallet_watchAsset',
-                    params: { type: 'ERC20', options: { address: TOKEN_CONTRACT_POLYGON, symbol: 'CAMB', decimals: 18 } }
-                });
-            } catch (e) { alert("Erro ao adicionar token."); }
-        }
-
-        function abrirSeletor() { document.getElementById("walletModal").style.display = "flex"; }
-        function fecharSeletor() { document.getElementById("walletModal").style.display = "none"; }
-        
         async function executarConexao(tipo) {
-            if (!window.ethereum) return alert("Instale a MetaMask!");
+            // REDIRECIONAMENTO DEEP LINK
+            if (!window.ethereum) {
+                const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+                if (isMobile) {
+                    const url = window.location.href.replace(/^https?:\/\//, '');
+                    window.location.href = `https://metamask.app.link/dapp/${url}`;
+                    return;
+                }
+                return alert("Instale a MetaMask ou use um navegador Web3!");
+            }
+            
             try {
                 await window.ethereum.request({ method: 'eth_requestAccounts' });
                 document.getElementById("btnCon").innerText = "CONECTADO";
@@ -183,21 +155,19 @@
 
         async function buy() {
             const valor = document.getElementById('amt').value;
-            if (!valor || valor <= 0) return alert("Insira uma quantidade válida.");
-            
+            if (!valor || valor <= 0) return alert("Insira valor válido.");
             try {
                 const provider = new ethers.BrowserProvider(window.ethereum);
                 const signer = await provider.getSigner();
                 const abi = ["function comprarTokens() payable"];
                 const contract = new ethers.Contract(PRESALE_CONTRACT_POLYGON, abi, signer);
-                
                 const tx = await contract.comprarTokens({ value: ethers.parseEther(valor) });
                 alert("Transação enviada! Hash: " + tx.hash);
-            } catch (e) { 
-                console.error(e);
-                alert("Erro: " + (e.reason || e.message)); 
-            }
+            } catch (e) { alert("Erro: " + (e.reason || e.message)); }
         }
+
+        function abrirSeletor() { document.getElementById("walletModal").style.display = "flex"; }
+        function fecharSeletor() { document.getElementById("walletModal").style.display = "none"; }
     </script>
 </body>
-</html>
+    </html>
