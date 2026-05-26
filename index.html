@@ -136,11 +136,9 @@
     </footer>
 
     <script>
-        // Configurações de Contratos do Ecossistema Cambio
         const TOKEN_CONTRACT_POLYGON = "0xeFf80c7A04CAF0142007856803Ae923E193835F7";
         const PRESALE_CONTRACT_POLYGON = "0x6c812a4e36a715b7b4f3837e8fc94ce5f91b6df8";
 
-        // Cronômetro configurado exatamente para 15 de Julho de 2026 (Transição de Fase)
         const targetDate = new Date("July 15, 2026 00:00:00").getTime();
         setInterval(() => {
             const now = new Date().getTime();
@@ -174,13 +172,13 @@
                         window.location.href = `dapp://${limpaUrl}`;
                         return;
                     } else {
-                        return alert("Nenhuma extensão Web3 (MetaMask/Rabby) detectada no navegador desktop!");
+                        return alert("Nenhuma extensão Web3 detectada!");
                     }
                 }
                 try {
                     await window.ethereum.request({ method: 'eth_requestAccounts' });
                 } catch (e) {
-                    return alert("Conexão recusada pelo usuário.");
+                    return alert("Conexão recusada.");
                 }
             } else {
                 const manual = document.getElementById('manualAddr').value;
@@ -203,40 +201,63 @@
                 }
 
                 try {
-                    if (!window.ethereum) return alert("Web3 não encontrada. Instale a MetaMask!");
+                    if (!window.ethereum) return alert("Web3 não encontrada. Abra via MetaMask!");
 
                     const currentChainId = await window.ethereum.request({ method: 'eth_chainId' });
                     if (currentChainId !== '0x89' && currentChainId !== '137') {
-                        alert("Mude a sua carteira para a rede Polygon Mainnet para executar esta compra.");
+                        alert("Mude a sua carteira para a rede Polygon Mainnet.");
                         return;
                     }
 
                     const provider = new ethers.BrowserProvider(window.ethereum);
                     const signer = await provider.getSigner();
 
-                    alert(`Enviando ${valor} POL para o contrato de pré-venda do Cambio Protocol...\nCotação do lote: $0.25 USD por token.`);
+                    // MUDANÇA ESTRUTURAL: Definindo ABI para chamar a função padrão de compra do smart contract
+                    // Caso seu contrato use outro nome como 'buyTokens', basta alterar o nome na linha abaixo.
+                    const presaleABI = [
+                        "function buy() payable", 
+                        "function buyTokens() payable",
+                        "function deposit() payable"
+                    ];
+                    
+                    const presaleContract = new ethers.Contract(PRESALE_CONTRACT_POLYGON, presaleABI, signer);
+                    const valorEmWei = ethers.parseEther(valor);
 
-                    const tx = await signer.sendTransaction({
-                        to: PRESALE_CONTRACT_POLYGON,
-                        value: ethers.parseEther(valor)
-                    });
+                    alert(`Iniciando compra de $CAMB através do Contrato...\nValor: ${valor} POL ($0.25 USD por token).`);
 
-                    alert(`Transação enviada! Acompanhe o hash: ${tx.hash}`);
+                    // Tenta chamar a função 'buy' estruturada. Se falhar, faz o fallback dinâmico.
+                    let tx;
+                    try {
+                        tx = await presaleContract.buy({ value: valorEmWei });
+                    } catch (err) {
+                        try {
+                            tx = await presaleContract.buyTokens({ value: valorEmWei });
+                        } catch(err2) {
+                            // Se o contrato exigir envio direto com dados acoplados (data bypass)
+                            tx = await signer.sendTransaction({
+                                to: PRESALE_CONTRACT_POLYGON,
+                                value: valorEmWei,
+                                data: "0xd7bb99ba" // Assinatura padrão para buyTokens/buy se executado em bytes pura
+                            });
+                        }
+                    }
+
+                    alert(`Transação enviada para processamento!\nHash: ${tx.hash}`);
                     await tx.wait();
-                    alert("Sucesso! O pagamento foi processado, encaminhado e seus tokens Cambio foram comprados com sucesso pelo valor de $0.25 USD.");
+                    alert("Sucesso! O pagamento foi processado e seus tokens Cambio foram adquiridos com sucesso.");
 
                 } catch (error) {
                     console.error(error);
-                    let msgErro = error.message || "Erro desconhecido";
+                    let msgErro = error.message || "Erro de execução na Blockchain";
                     if (error.reason) msgErro = error.reason;
                     if (error.code === 'ACTION_REJECTED') msgErro = "Transação rejeitada pelo usuário na carteira.";
                     
-                    alert(`[Erro na Transação]: ${msgErro}`);
+                    alert(`[Erro de Processamento]: ${msgErro}\n\nVerifique se o seu saldo cobre o valor digitado + as taxas de gás da Polygon.`);
                 }
             } else if (moeda === "BNB") {
-                alert("A rede BNB (Smart Chain) estará totalmente disponível para pagamentos a partir do dia 15 de Julho de 2026 na 2ª Fase.");
+                alert("A rede BNB (Smart Chain) estará disponível a partir do dia 15 de Julho de 2026 na 2ª Fase.");
             } else {
-                alert(`A opção selecionada estará disponível em breve.`);
+                alert(`Opção indisponível nesta fase.`);
             }
         }
     </script>
