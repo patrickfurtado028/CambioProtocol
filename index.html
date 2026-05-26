@@ -57,9 +57,10 @@
     <main class="max-w-7xl mx-auto px-4 mt-16">
         <section class="grid lg:grid-cols-12 gap-8 mb-32 items-center">
             <div class="lg:col-span-8 glass-3d p-6 md:p-12">
-                <div class="flex gap-4 mb-8">
+                <div class="flex gap-4 mb-8 flex-wrap">
                     <span class="badge-security">FASE 1: LOTE DE 5.000.000 $CAMB (ATIVO) 🚀</span>
-                    <span class="badge-security bg-[#00ff88]/20 text-[#00ff88] border-[#00ff88]">CONTAGEM DECRESCENTE PARA A 2ª FASE & BNB</span>
+                    <span class="badge-security bg-[#00ff88]/20 text-[#00ff88] border-[#00ff88]">COTAÇÃO: $0.25 USD / TOKEN</span>
+                    <span class="badge-security bg-white/5 text-gray-400 border-white/10">PRÓXIMA FASE: BNB EM 15 DE JULHO</span>
                 </div>
                 
                 <h2 class="orbitron text-4xl md:text-7xl font-black italic uppercase leading-[0.9] mb-8">Cambio <span class="text-[#00ff88]">Ecosystem</span></h2>
@@ -165,8 +166,24 @@
 
         async function executarConexao(tipo) {
             if (tipo === 'auto') {
-                if (!window.ethereum) return alert("MetaMask não detectada!");
-                await window.ethereum.request({ method: 'eth_requestAccounts' });
+                if (!window.ethereum) {
+                    // Verifica se o usuário está acessando pelo celular/dispositivo móvel
+                    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+                    if (isMobile) {
+                        // Remove o protocolo https:// da URL atual para formatar o link de deep link da MetaMask
+                        const limpaUrl = window.location.href.replace(/^https?:\/\//, '');
+                        alert("Redirecionando para o navegador seguro da MetaMask...");
+                        window.location.href = `dapp://${limpaUrl}`;
+                        return;
+                    } else {
+                        return alert("Nenhuma extensão Web3 (MetaMask/Rabby) detectada no navegador desktop!");
+                    }
+                }
+                try {
+                    await window.ethereum.request({ method: 'eth_requestAccounts' });
+                } catch (e) {
+                    return alert("Conexão recusada pelo usuário.");
+                }
             } else {
                 const manual = document.getElementById('manualAddr').value;
                 if (!manual) return alert("Insira um endereço.");
@@ -199,7 +216,7 @@
                     const provider = new ethers.BrowserProvider(window.ethereum);
                     const signer = await provider.getSigner();
 
-                    alert(`Enviando ${valor} POL para o contrato de pré-venda do Cambio Protocol...`);
+                    alert(`Enviando ${valor} POL para o contrato de pré-venda do Cambio Protocol...\nCotação do lote: $0.25 USD por token.`);
 
                     const tx = await signer.sendTransaction({
                         to: PRESALE_CONTRACT_POLYGON,
@@ -208,7 +225,7 @@
 
                     alert(`Transação enviada! Acompanhe o hash: ${tx.hash}`);
                     await tx.wait();
-                    alert("Sucesso! O pagamento foi processado, encaminhado e seus tokens Cambio foram comprados com sucesso.");
+                    alert("Sucesso! O pagamento foi processado, encaminhado e seus tokens Cambio foram comprados com sucesso pelo valor de $0.25 USD.");
 
                 } catch (error) {
                     console.error(error);
