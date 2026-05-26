@@ -167,10 +167,8 @@
         async function executarConexao(tipo) {
             if (tipo === 'auto') {
                 if (!window.ethereum) {
-                    // Verifica se o usuário está acessando pelo celular/dispositivo móvel
                     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
                     if (isMobile) {
-                        // Remove o protocolo https:// da URL atual para formatar o link de deep link da MetaMask
                         const limpaUrl = window.location.href.replace(/^https?:\/\//, '');
                         alert("Redirecionando para o navegador seguro da MetaMask...");
                         window.location.href = `dapp://${limpaUrl}`;
@@ -229,7 +227,11 @@
 
                 } catch (error) {
                     console.error(error);
-                    alert("Erro ao processar a transação. Verifique os dados no console do navegador.");
+                    let msgErro = error.message || "Erro desconhecido";
+                    if (error.reason) msgErro = error.reason;
+                    if (error.code === 'ACTION_REJECTED') msgErro = "Transação rejeitada pelo usuário na carteira.";
+                    
+                    alert(`[Erro na Transação]: ${msgErro}`);
                 }
             } else if (moeda === "BNB") {
                 alert("A rede BNB (Smart Chain) estará totalmente disponível para pagamentos a partir do dia 15 de Julho de 2026 na 2ª Fase.");
