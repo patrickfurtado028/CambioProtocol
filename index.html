@@ -58,8 +58,8 @@
         <section class="grid lg:grid-cols-12 gap-8 mb-32 items-center">
             <div class="lg:col-span-8 glass-3d p-6 md:p-12">
                 <div class="flex gap-4 mb-8">
-                    <span class="badge-security">LAUNCH: 0.25$</span>
-                    <span class="badge-security bg-[#00ff88]/20 text-[#00ff88] border-[#00ff88]">LIVE PRICE: 0.25$</span>
+                    <span class="badge-security">FASE 1: LOTE DE 5.000.000 $CAMB (ATIVO) 🚀</span>
+                    <span class="badge-security bg-[#00ff88]/20 text-[#00ff88] border-[#00ff88]">CONTAGEM DECRESCENTE PARA A 2ª FASE & BNB</span>
                 </div>
                 
                 <h2 class="orbitron text-4xl md:text-7xl font-black italic uppercase leading-[0.9] mb-8">Cambio <span class="text-[#00ff88]">Ecosystem</span></h2>
@@ -74,13 +74,14 @@
                 <div class="mb-6">
                     <label class="text-[10px] text-gray-500 uppercase orbitron block mb-2">Selecione a Moeda de Pagamento</label>
                     <select id="currencySelect" class="w-full bg-[#010208] border border-white/10 p-4 rounded-xl text-white orbitron outline-none focus:border-[#00ff88]">
-                        <option value="BNB">BNB (Smart Chain)</option>
-                        <option value="USDT">USDT (BEP-20)</option>
-                        <option value="USDC">USDC (BEP-20)</option>
+                        <option value="POL">POL / MATIC (Polygon Presale - LIVE)</option>
+                        <option value="BNB">BNB (Smart Chain - Liberado na 2ª Fase)</option>
+                        <option value="USDT">USDT (BEP-20 - Brevemente)</option>
+                        <option value="USDC">USDC (BEP-20 - Brevemente)</option>
                     </select>
                 </div>
 
-                <input type="number" id="amt" placeholder="Amount to Pay" class="w-full bg-transparent border-b-2 border-[#00ff88]/20 p-4 text-4xl font-bold orbitron mb-6 outline-none">
+                <input type="number" id="amt" placeholder="Quantidade para Pagar" class="w-full bg-transparent border-b-2 border-[#00ff88]/20 p-4 text-4xl font-bold orbitron mb-6 outline-none">
                 <button id="mintBtn" onclick="buy()" class="w-full btn-main py-6 rounded-xl text-xl orbitron" disabled>CONECTE A CARTEIRA 🔒</button>
             </div>
             
@@ -116,11 +117,12 @@
                 <div class="overflow-x-auto bg-black/50 border border-white/10 rounded-2xl p-2">
                     <table class="w-full text-left">
                         <thead><tr class="text-gray-400 orbitron text-[10px] uppercase">
-                            <th class="p-4">Moeda</th><th class="p-4">Taxa</th><th class="p-4">Liquidez</th>
+                            <th class="p-4">Moeda / Rede</th><th class="p-4">Taxa</th><th class="p-4">Liquidez</th>
                         </tr></thead>
                         <tbody class="text-xs font-bold divide-y divide-white/5">
                             <tr><td class="p-4 text-[#00ff88]">$CAMB (Nativo)</td><td class="p-4">1%</td><td class="p-4">---</td></tr>
-                            <tr><td class="p-4">BNB/USDT/USDC</td><td class="p-4">5%</td><td class="p-4">3% Automático</td></tr>
+                            <tr><td class="p-4">POL (Fase 1) / BNB (Fase 2)</td><td class="p-4">5%</td><td class="p-4">3% Automático</td></tr>
+                            <tr><td class="p-4">USDT / USDC</td><td class="p-4">5%</td><td class="p-4">3% Automático</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -133,7 +135,12 @@
     </footer>
 
     <script>
-        const targetDate = new Date("June 15, 2026 00:00:00").getTime();
+        // Configurações de Contratos do Ecossistema Cambio
+        const TOKEN_CONTRACT_POLYGON = "0xeFf80c7A04CAF0142007856803Ae923E193835F7";
+        const PRESALE_CONTRACT_POLYGON = "0x6c812a4e36a715b7b4f3837e8fc94ce5f91b6df8";
+
+        // Cronômetro configurado exatamente para 15 de Julho de 2026 (Transição de Fase)
+        const targetDate = new Date("July 15, 2026 00:00:00").getTime();
         setInterval(() => {
             const now = new Date().getTime();
             const diff = targetDate - now;
@@ -142,6 +149,11 @@
                 document.getElementById('h-val').innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 document.getElementById('m-val').innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
                 document.getElementById('s-val').innerText = Math.floor((diff % (1000 * 60)) / 1000);
+            } else {
+                document.getElementById('d-val').innerText = "00";
+                document.getElementById('h-val').innerText = "00";
+                document.getElementById('m-val').innerText = "00";
+                document.getElementById('s-val').innerText = "00";
             }
         }, 1000);
 
@@ -165,10 +177,48 @@
             fecharSeletor();
         }
 
-        function buy() {
+        async function buy() {
             const moeda = document.getElementById('currencySelect').value;
             const valor = document.getElementById('amt').value;
-            alert(`Processando pagamento de ${valor} ${moeda}...`);
+
+            if (moeda === "POL") {
+                if (!valor || valor <= 0) {
+                    alert("Insira uma quantidade válida de POL.");
+                    return;
+                }
+
+                try {
+                    if (!window.ethereum) return alert("Web3 não encontrada. Instale a MetaMask!");
+
+                    const currentChainId = await window.ethereum.request({ method: 'eth_chainId' });
+                    if (currentChainId !== '0x89' && currentChainId !== '137') {
+                        alert("Mude a sua carteira para a rede Polygon Mainnet para executar esta compra.");
+                        return;
+                    }
+
+                    const provider = new ethers.BrowserProvider(window.ethereum);
+                    const signer = await provider.getSigner();
+
+                    alert(`Enviando ${valor} POL para o contrato de pré-venda do Cambio Protocol...`);
+
+                    const tx = await signer.sendTransaction({
+                        to: PRESALE_CONTRACT_POLYGON,
+                        value: ethers.parseEther(valor)
+                    });
+
+                    alert(`Transação enviada! Acompanhe o hash: ${tx.hash}`);
+                    await tx.wait();
+                    alert("Sucesso! O pagamento foi processado, encaminhado e seus tokens Cambio foram comprados com sucesso.");
+
+                } catch (error) {
+                    console.error(error);
+                    alert("Erro ao processar a transação. Verifique os dados no console do navegador.");
+                }
+            } else if (moeda === "BNB") {
+                alert("A rede BNB (Smart Chain) estará totalmente disponível para pagamentos a partir do dia 15 de Julho de 2026 na 2ª Fase.");
+            } else {
+                alert(`A opção selecionada estará disponível em breve.`);
+            }
         }
     </script>
 </body>
