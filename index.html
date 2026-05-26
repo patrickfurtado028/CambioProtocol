@@ -91,53 +91,16 @@
             </div>
         </section>
 
-        <section class="mb-32 grid md:grid-cols-2 gap-12 glass-3d p-12">
-            <div>
-                <h3 class="orbitron text-2xl font-black mb-6 text-[#00ff88]">O CAMBIO PROTOCOL</h3>
-                <p class="text-sm text-gray-400 leading-relaxed">
-                    O Cambio Protocol não é apenas um token; é uma infraestrutura financeira descentralizada projetada para preencher a lacuna entre o varejo e o blockchain. Nosso ecossistema foca na automação de liquidez e na democratização de sistemas de pagamento global. Com uma estrutura matemática rígida, garantimos que cada transação fortaleça a saúde do nosso cofre e a estabilidade do token $CAMB.
-                </p>
-            </div>
-            <div>
-                <h3 class="orbitron text-2xl font-black mb-6 text-[#00ff88]">A FERRAMENTA COINPAY</h3>
-                <p class="text-sm text-gray-400 leading-relaxed">
-                    A CoinPay é a nossa solução proprietária de "Payment Gateway". Desenvolvida para ser integrada em qualquer interface, ela automatiza a divisão de taxas: enquanto uma parte é destinada ao desenvolvimento contínuo, outra é automaticamente convertida em liquidez injeção imediata. Isso elimina a volatilidade extrema e garante crescimento sustentável para quem acredita no projeto desde o lançamento.
-                </p>
-            </div>
-        </section>
-
-        <section class="mb-32 grid lg:grid-cols-3 gap-8">
-            <div class="glass-3d p-10"><h4 class="orbitron font-black text-xl mb-4">Segurança Total</h4><p class="text-sm text-gray-400">Contrato auditado com certificados de segurança de alto nível.</p></div>
-            <div class="glass-3d p-10 border-[#00ff88]/40"><h4 class="orbitron font-black text-xl mb-4 text-[#00ff88]">Cofre Diamond</h4><p class="text-sm text-gray-400">95% da liquidez está selada sob Time-Lock.</p></div>
-            <div class="glass-3d p-10"><h4 class="orbitron font-black text-xl mb-4">Global Community</h4><p class="text-sm text-gray-400">Uma comunidade vibrante e activa impulsionando o ecossistema.</p></div>
-        </section>
-
-        <section class="mb-32">
-            <div class="glass-3d p-12 border-dashed border-[#00ff88]/30">
-                <h3 class="orbitron text-4xl font-black mb-6 uppercase">CoinPay Protocol</h3>
-                <div class="overflow-x-auto bg-black/50 border border-white/10 rounded-2xl p-2">
-                    <table class="w-full text-left">
-                        <thead><tr class="text-gray-400 orbitron text-[10px] uppercase">
-                            <th class="p-4">Moeda / Rede</th><th class="p-4">Taxa</th><th class="p-4">Liquidez</th>
-                        </tr></thead>
-                        <tbody class="text-xs font-bold divide-y divide-white/5">
-                            <tr><td class="p-4 text-[#00ff88]">$CAMB (Nativo)</td><td class="p-4">1%</td><td class="p-4">---</td></tr>
-                            <tr><td class="p-4">POL (Fase 1) / BNB (Fase 2)</td><td class="p-4">5%</td><td class="p-4">3% Automático</td></tr>
-                            <tr><td class="p-4">USDT / USDC</td><td class="p-4">5%</td><td class="p-4">3% Automático</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-    </main>
+        </main>
 
     <footer class="border-t border-white/5 py-20 text-center bg-black/50">
         <p class="orbitron text-[10px] text-gray-700 tracking-[1em] uppercase">Cambio Protocol Integrated System @2026-2027</p>
     </footer>
 
     <script>
+        // ENDEREÇOS ATUALIZADOS
         const TOKEN_CONTRACT_POLYGON = "0xeFf80c7A04CAF0142007856803Ae923E193835F7";
-        const PRESALE_CONTRACT_POLYGON = "0x6c812a4e36a715b7b4f3837e8fc94ce5f91b6df8";
+        const PRESALE_CONTRACT_POLYGON = "0x0cf1ceff15acde8e6becd592dfac207222d5a4c9";
 
         const targetDate = new Date("July 15, 2026 00:00:00").getTime();
         setInterval(() => {
@@ -148,11 +111,6 @@
                 document.getElementById('h-val').innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 document.getElementById('m-val').innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
                 document.getElementById('s-val').innerText = Math.floor((diff % (1000 * 60)) / 1000);
-            } else {
-                document.getElementById('d-val').innerText = "00";
-                document.getElementById('h-val').innerText = "00";
-                document.getElementById('m-val').innerText = "00";
-                document.getElementById('s-val').innerText = "00";
             }
         }, 1000);
 
@@ -163,100 +121,41 @@
         function fecharSeletor() { document.getElementById("walletModal").style.display = "none"; }
 
         async function executarConexao(tipo) {
-            if (tipo === 'auto') {
-                if (!window.ethereum) {
-                    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-                    if (isMobile) {
-                        const limpaUrl = window.location.href.replace(/^https?:\/\//, '');
-                        alert("Redirecionando para o navegador seguro da MetaMask...");
-                        window.location.href = `dapp://${limpaUrl}`;
-                        return;
-                    } else {
-                        return alert("Nenhuma extensão Web3 detectada!");
-                    }
-                }
-                try {
+            try {
+                if (tipo === 'auto') {
+                    if (!window.ethereum) return alert("Nenhuma carteira Web3 detectada!");
                     await window.ethereum.request({ method: 'eth_requestAccounts' });
-                } catch (e) {
-                    return alert("Conexão recusada.");
                 }
-            } else {
-                const manual = document.getElementById('manualAddr').value;
-                if (!manual) return alert("Insira um endereço.");
-            }
-            document.getElementById("btnCon").innerText = "CONECTADO";
-            document.getElementById("mintBtn").disabled = false;
-            document.getElementById("mintBtn").innerText = "EXECUTAR PAGAMENTO";
-            fecharSeletor();
+                document.getElementById("btnCon").innerText = "CONECTADO";
+                document.getElementById("mintBtn").disabled = false;
+                document.getElementById("mintBtn").innerText = "EXECUTAR PAGAMENTO";
+                fecharSeletor();
+            } catch (e) { alert("Conexão falhou."); }
         }
 
         async function buy() {
-            const moeda = document.getElementById('currencySelect').value;
             const valor = document.getElementById('amt').value;
+            if (!valor || valor <= 0) return alert("Insira uma quantidade válida.");
 
-            if (moeda === "POL") {
-                if (!valor || valor <= 0) {
-                    alert("Insira uma quantidade válida de POL.");
-                    return;
-                }
+            try {
+                const provider = new ethers.BrowserProvider(window.ethereum);
+                const signer = await provider.getSigner();
+                const valorEmHex = "0x" + ethers.parseEther(valor).toString(16);
 
-                try {
-                    if (!window.ethereum) return alert("Web3 não encontrada. Abra via MetaMask!");
+                const txHash = await window.ethereum.request({
+                    method: 'eth_sendTransaction',
+                    params: [{
+                        from: await signer.getAddress(),
+                        to: PRESALE_CONTRACT_POLYGON,
+                        value: valorEmHex,
+                        gas: "0x493E0" // Limite de gas aumentado para processar o contrato
+                    }],
+                });
 
-                    const currentChainId = await window.ethereum.request({ method: 'eth_chainId' });
-                    if (currentChainId !== '0x89' && currentChainId !== '137') {
-                        alert("Mude a sua carteira para a rede Polygon Mainnet.");
-                        return;
-                    }
-
-                    // Prepara os dados do usuário e valores
-                    const provider = new ethers.BrowserProvider(window.ethereum);
-                    const signer = await provider.getSigner();
-                    const fromAddress = await signer.getAddress();
-                    
-                    // Converte para hexadecimal usando a matemática padrão da EVM
-                    const valorEmWei = ethers.parseEther(valor);
-                    const valorEmHex = "0x" + valorEmWei.toString(16);
-
-                    // Solução Nativa: Bypassa o Ethers.js e manda a ordem direta para a MetaMask lidar.
-                    // Isso evita o bug "could not coalesce error" em celulares.
-                    const txHash = await window.ethereum.request({
-                        method: 'eth_sendTransaction',
-                        params: [{
-                            from: fromAddress,
-                            to: PRESALE_CONTRACT_POLYGON,
-                            value: valorEmHex,
-                            gas: "0x249F0" // 150000 de gas limite (segurança)
-                        }],
-                    });
-
-                    alert(`Transação enviada com sucesso!\nHash: ${txHash}\n\nAguarde alguns instantes para confirmação na blockchain.`);
-                    
-                    // Fica aguardando silenciosamente a confirmação no bloco
-                    const receipt = await provider.waitForTransaction(txHash);
-                    if (receipt.status === 1) {
-                        alert("Sucesso! O pagamento foi confirmado na rede e seus tokens Cambio foram adquiridos.");
-                    } else {
-                        alert("A transação falhou durante a execução na rede.");
-                    }
-
-                } catch (error) {
-                    console.error(error);
-                    
-                    // Identifica se o usuário rejeitou ou se a wallet barrou
-                    let msg = "Ação cancelada ou erro de processamento.";
-                    if (error.code === 4001) {
-                        msg = "Você rejeitou a transação.";
-                    } else if (error.message) {
-                        msg = error.message;
-                    }
-                    
-                    alert(`[Cancelado]: ${msg}\n\nNota: Se a MetaMask avisar que a transação "vai falhar", significa que o Contrato está recusando pagamentos neste momento.`);
-                }
-            } else if (moeda === "BNB") {
-                alert("A rede BNB (Smart Chain) estará disponível a partir do dia 15 de Julho de 2026 na 2ª Fase.");
-            } else {
-                alert(`Opção indisponível nesta fase.`);
+                alert("Transação enviada! Hash: " + txHash);
+            } catch (error) {
+                console.error(error);
+                alert("Erro: Verifique se o contrato tem tokens e se você está na rede Polygon.");
             }
         }
     </script>
