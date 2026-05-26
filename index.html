@@ -91,17 +91,56 @@
             </div>
         </section>
 
-        </main>
+        <section class="mb-32 grid md:grid-cols-2 gap-12 glass-3d p-12">
+            <div>
+                <h3 class="orbitron text-2xl font-black mb-6 text-[#00ff88]">O CAMBIO PROTOCOL</h3>
+                <p class="text-sm text-gray-400 leading-relaxed">
+                    O Cambio Protocol não é apenas um token; é uma infraestrutura financeira descentralizada projetada para preencher a lacuna entre o varejo e o blockchain. Nosso ecossistema foca na automação de liquidez e na democratização de sistemas de pagamento global. Com uma estrutura matemática rígida, garantimos que cada transação fortaleça a saúde do nosso cofre e a estabilidade do token $CAMB.
+                </p>
+            </div>
+            <div>
+                <h3 class="orbitron text-2xl font-black mb-6 text-[#00ff88]">A FERRAMENTA COINPAY</h3>
+                <p class="text-sm text-gray-400 leading-relaxed">
+                    A CoinPay é a nossa solução proprietária de "Payment Gateway". Desenvolvida para ser integrada em qualquer interface, ela automatiza a divisão de taxas: enquanto uma parte é destinada ao desenvolvimento contínuo, outra é automaticamente convertida em liquidez injeção imediata. Isso elimina a volatilidade extrema e garante crescimento sustentável para quem acredita no projeto desde o lançamento.
+                </p>
+            </div>
+        </section>
+
+        <section class="mb-32 grid lg:grid-cols-3 gap-8">
+            <div class="glass-3d p-10"><h4 class="orbitron font-black text-xl mb-4">Segurança Total</h4><p class="text-sm text-gray-400">Contrato auditado com certificados de segurança de alto nível.</p></div>
+            <div class="glass-3d p-10 border-[#00ff88]/40"><h4 class="orbitron font-black text-xl mb-4 text-[#00ff88]">Cofre Diamond</h4><p class="text-sm text-gray-400">95% da liquidez está selada sob Time-Lock.</p></div>
+            <div class="glass-3d p-10"><h4 class="orbitron font-black text-xl mb-4">Global Community</h4><p class="text-sm text-gray-400">Uma comunidade vibrante e activa impulsionando o ecossistema.</p></div>
+        </section>
+
+        <section class="mb-32">
+            <div class="glass-3d p-12 border-dashed border-[#00ff88]/30">
+                <h3 class="orbitron text-4xl font-black mb-6 uppercase">CoinPay Protocol</h3>
+                <div class="overflow-x-auto bg-black/50 border border-white/10 rounded-2xl p-2">
+                    <table class="w-full text-left">
+                        <thead><tr class="text-gray-400 orbitron text-[10px] uppercase">
+                            <th class="p-4">Moeda / Rede</th><th class="p-4">Taxa</th><th class="p-4">Liquidez</th>
+                        </tr></thead>
+                        <tbody class="text-xs font-bold divide-y divide-white/5">
+                            <tr><td class="p-4 text-[#00ff88]">$CAMB (Nativo)</td><td class="p-4">1%</td><td class="p-4">---</td></tr>
+                            <tr><td class="p-4">POL (Fase 1) / BNB (Fase 2)</td><td class="p-4">5%</td><td class="p-4">3% Automático</td></tr>
+                            <tr><td class="p-4">USDT / USDC</td><td class="p-4">5%</td><td class="p-4">3% Automático</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
 
     <footer class="border-t border-white/5 py-20 text-center bg-black/50">
         <p class="orbitron text-[10px] text-gray-700 tracking-[1em] uppercase">Cambio Protocol Integrated System @2026-2027</p>
     </footer>
 
     <script>
-        // ENDEREÇOS ATUALIZADOS
+        // CONFIGURAÇÕES DOS ENDEREÇOS REAIS
         const TOKEN_CONTRACT_POLYGON = "0xeFf80c7A04CAF0142007856803Ae923E193835F7";
         const PRESALE_CONTRACT_POLYGON = "0x0cf1ceff15acde8e6becd592dfac207222d5a4c9";
 
+        // Cronômetro
         const targetDate = new Date("July 15, 2026 00:00:00").getTime();
         setInterval(() => {
             const now = new Date().getTime();
@@ -148,14 +187,14 @@
                         from: await signer.getAddress(),
                         to: PRESALE_CONTRACT_POLYGON,
                         value: valorEmHex,
-                        gas: "0x493E0" // Limite de gas aumentado para processar o contrato
+                        gas: "0x493E0" 
                     }],
                 });
 
                 alert("Transação enviada! Hash: " + txHash);
             } catch (error) {
                 console.error(error);
-                alert("Erro: Verifique se o contrato tem tokens e se você está na rede Polygon.");
+                alert("Erro: Verifique se o contrato tem tokens e se você está na rede correta.");
             }
         }
     </script>
